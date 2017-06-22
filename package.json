@@ -1,0 +1,19 @@
+{
+  "name": "skiski-app",
+  "version": "1.0.0",
+  "description": "Ski trail ratings",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ski-ski/skiski-app.git"
+  },
+  "author": "skiski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ski-ski/skiski-app/issues"
+  },
+  "homepage": "https://github.com/ski-ski/skiski-app#readme"
+}
