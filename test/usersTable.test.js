@@ -34,14 +34,14 @@ suite('users migration', addDatabaseHooks(() => {
             type: 'character varying',
             maxLength: 255,
             nullable: false,
-            defaultValue: '\'\'::character varying'
+            defaultValue: null
           },
 
           hashed_password: {
-            type: 'text',
-            maxLength: null,
+            type: 'character',
+            maxLength: 60,
             nullable: false,
-            defaultValue: '\'\'::text'
+            defaultValue: null
           }
 				};
 
