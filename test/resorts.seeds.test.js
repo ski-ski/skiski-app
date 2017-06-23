@@ -1,11 +1,16 @@
+process.env.NODE_ENV = 'test';
 
-exports.seed = function(knex, Promise) {
-  // Deletes ALL existing entries
-  return knex('resorts').del()
-    .then(function () {
-      // Inserts seed entries
-      return knex('resorts').insert([
-        {
+const assert = require('chai').assert;
+const { suite, test } = require('mocha');
+const knex = require('../knex');
+const { addDatabaseHooks } = require('./utils')
+
+suite('resorts seeds', addDatabaseHooks(() => {
+  test('resorts rows', (done) => {
+    knex('resorts').orderBy('id', 'ASC')
+      .then((actual) => {
+        /* eslint-disable max-len */
+        const expected = [{
           id: 1,
           name: 'Squaw Valley',
           windspeed: 10, temperature: 40,
@@ -66,11 +71,22 @@ exports.seed = function(knex, Promise) {
           windspeed:2,
           temperature: 78,
           snow_depth: 1
+        }];
+
+        /* eslint-enable max-len */
+
+        for (let i = 0; i < expected.length; i++) {
+          assert.deepEqual(
+            actual[i],
+            expected[i],
+            `Row id=${i + 1} not the same`
+          );
         }
 
-      ]);
-    })
-    .then(function(){
-          return knex.raw(`SELECT setval('resorts_id_seq', (SELECT MAX(id) FROM resorts))`)
+        done();
+      })
+      .catch((err) => {
+        done(err);
       });
-};
+  });
+}));
