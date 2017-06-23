@@ -13,14 +13,7 @@ suite('trails migration', addDatabaseHooks(() => {
             type: 'integer',
             maxLength: null,
             nullable: false,
-            defaultValue: 'nextval(\'users_id_seq\'::regclass)'
-          },
-
-          resort_id: {
-            type: 'integer',
-            maxLength: null,
-            nullable: false,
-            defaultValue: null
+            defaultValue: 'nextval(\'trails_id_seq\'::regclass)'
           },
 
           name: {
@@ -28,6 +21,13 @@ suite('trails migration', addDatabaseHooks(() => {
             maxLength: 255,
             nullable: false,
             defaultValue: '\'\'::character varying'
+          },
+
+          resort_id: {
+            type: 'integer',
+            maxLength: null,
+            nullable: false,
+            defaultValue: null
           },
 
           difficulty: {
