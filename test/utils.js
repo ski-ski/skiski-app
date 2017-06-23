@@ -2,7 +2,7 @@
 const knex = require('../knex');
 
 // add knex database hooks to a test suite to tear down and build back
-// up the database on each test in test suite. 
+// up the database on each test in test suite.
 const addDatabaseHooks = (func) => {
   return function(...args) {
     beforeEach((done) => {
