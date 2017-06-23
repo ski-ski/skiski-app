@@ -2,11 +2,11 @@
   "name": "skiski-app",
   "version": "1.0.0",
   "description": "Ski trail ratings",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "run": "node app.js",
-    "dev": "nodemon app.js"
+    "run": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
