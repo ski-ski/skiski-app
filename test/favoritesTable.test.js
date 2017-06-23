@@ -36,7 +36,7 @@ suite('favorites migration', addDatabaseHooks(() => {
             nullable: false,
             defaultValue: null
           }
-				};
+        }
 
         for (const column in expected) {
           assert.deepEqual(
