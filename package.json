@@ -4,6 +4,7 @@
   "description": "Ski trail ratings",
   "main": "index.js",
   "scripts": {
+    "knex": "knex",
     "test": "mocha",
     "start": "node index.js",
     "dev": "nodemon index.js"
