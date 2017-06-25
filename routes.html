@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Routes</title>
+    <meta charset="utf-8"/>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 100px;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      table, td, th {
+        border: 1px solid black;
+      }
+      td, th {
+        padding: 4px;
+      }
+      tr:nth-child(odd){background-color: #eee}
+    </style>
+  </head>
+
+  <body>
+    <h1>Routes</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th colspan=3>Route</th>
+          <th colspan=2>Expected request</th>
+          <th colspan=3>Response on success</th>
+          <th colspan=3>Response on fail</th>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <th>Method</th>
+          <th>URL</th>
+          <th>Header</th>
+          <th>Body</th>
+          <th>Code</th>
+          <th>Header</th>
+          <th>Body</th>
+          <th>Code</th>
+          <th>Header</th>
+          <th>Body</th>
+        </tr>
+      </thead>
+      <tbody id="routesTable">
+      </tbody>
+    </table>
+
+<script>
+let routesData = [
+  {
+    description: 'Send login and password for authentication (receive a JWT)',
+    method: 'POST',
+    route: '/token',
+    expReqHeader: '',
+    expReqBody: '{email: xxx, password: yyy}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: 'JWT',
+    respBodyOnSuccess: '{email: xxx, first_name: aaa, last_name: bbb}',
+    respCodeOnFail: 400,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'Bad email or password'
+  },
+  {
+    description: 'Check if authenticated',
+    method: 'GET',
+    route: '/token',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: 'true if there is a JWT in request header. false if not',
+    respCodeOnFail: 400,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Remove token cookie (containing JWT)',
+    method: 'DELETE',
+    route: '/token',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: 'Clear JWT cookie',
+    respBodyOnSuccess: 'true',
+    respCodeOnFail: 500,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'false'
+  },
+  {
+    description: 'Create a new user',
+    method: 'POST',
+    route: '/users',
+    expReqHeader: '',
+    expReqBody: '{email: xxx, password: yyy, first_name: xxx, ...}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: 'JWT',
+    respBodyOnSuccess: '{  same as request body, except the password  }',
+    respCodeOnFail: 409,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'Email already in use'
+  },
+  {
+    description: 'Read data for one user',
+    method: 'GET',
+    route: '/users/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all user data except password  }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'user does not exist'
+  },
+  {
+    description: 'Update user',
+    method: 'POST',
+    route: '/users/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '{email: xxx, password: yyy, first_name: xxx, ...}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ all user data except password }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'user does not exist'
+  },
+  {
+    description: 'Delete user',
+    method: 'DELETE',
+    route: '/users/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all users data except password  }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'user does not exist'
+  },
+  {
+    description: 'Query (list) all users',
+    method: 'GET',
+    route: '/users',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{users: [{id: 1, email: ..}, {id: 2, email: ..}, {}]}',
+    respCodeOnFail: 500,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Create a new resort',
+    method: 'POST',
+    route: '/resorts',
+    expReqHeader: 'JWT',
+    expReqBody: '{name: xxx, state: yyy, ...}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '',
+    respCodeOnFail: 500,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Read data for one resort',
+    method: 'GET',
+    route: '/resorts/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all resort data  }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'resort does not exist'
+  },
+  {
+    description: 'Update data for one resort',
+    method: 'POST',
+    route: '/resorts/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '{name: xxx, state: yyy, ...}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all resort data }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'resort does not exist'
+  },
+  {
+    description: 'Delete resort',
+    method: 'DELETE',
+    route: '/resorts/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ all resort data  }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'resort does not exist'
+  },
+  {
+    description: 'Query (list) all resorts',
+    method: 'GET',
+    route: '/resorts',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{resorts: [{id: 1, name: ..}, {id: 2, name: ..}, {}]}',
+    respCodeOnFail: 400,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Create a new trail',
+    method: 'POST',
+    route: '/trails',
+    expReqHeader: 'JWT',
+    expReqBody: '{name: xxx, resort_id: xyz, ...}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ same as request body }',
+    respCodeOnFail: 409,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'Trail name at that resort already defined'
+  },
+  {
+    description: 'Read data for one trail',
+    method: 'GET',
+    route: '/trails/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all trail data  }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'trail does not exist'
+  },
+  {
+    description: 'Update data for one trail',
+    method: 'POST',
+    route: '/trails/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '{name: xxx, : yyy, ...}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all trail data }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'trail does not exist'
+  },
+  {
+    description: 'Delete trail',
+    method: 'DELETE',
+    route: '/trails/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ all trail data  }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'trail does not exist'
+  },
+  {
+    description: 'Query (list) all trails',
+    method: 'GET',
+    route: '/trails',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{trails: [{id: 1, name: ..}, {id: 2, name: ..}, {}]}',
+    respCodeOnFail: 400,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Create a new rating',
+    method: 'POST',
+    route: '/ratings',
+    expReqHeader: 'JWT',
+    expReqBody: '{user_id: xxx, trail_id: rating: 5, review: text text text }',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '',
+    respCodeOnFail: 400,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Read data for one rating',
+    method: 'GET',
+    route: '/ratings/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess:
+      '{ all rating data, all trail data?, all user data?, all resort data? }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'rating does not exist'
+  },
+  {
+    description: 'Update data for one rating',
+    method: 'POST',
+    route: '/ratings/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '{rating: 3, ...}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all rating data }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'rating does not exist'
+  },
+  {
+    description: 'Delete rating',
+    method: 'DELETE',
+    route: '/ratings/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ all rating data ? }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'rating does not exist'
+  },
+  {
+    description: 'Query (list) all ratings',
+    method: 'GET',
+    route: '/ratings',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ratings: [{id: 1, ...}, {id: 2, ...}, {} ]}',
+    respCodeOnFail: 400,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Create a new favorite',
+    method: 'POST',
+    route: '/favorites',
+    expReqHeader: 'JWT',
+    expReqBody: '{user_id: xxx, trail_id: yyy}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ favorite data }',
+    respCodeOnFail: 400,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  },
+  {
+    description: 'Read data for one favorite',
+    method: 'GET',
+    route: '/favorites/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess:
+      '{ all favorite data, all trail data?, all user data?, all resort data?   }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'favorite does not exist'
+  },
+  {
+    description: 'Update data for one favorite',
+    method: 'POST',
+    route: '/favorites/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '{favorite: 3313, rank: 3}',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{  all favorite data }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'favorite does not exist'
+  },
+  {
+    description: 'Delete favorite',
+    method: 'DELETE',
+    route: '/favorites/:id',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{ all favorite data ? }',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: 'favorite does not exist'
+  },
+  {
+    description: 'Query (list) all favorites',
+    method: 'GET',
+    route: '/favorites',
+    expReqHeader: 'JWT',
+    expReqBody: '',
+    respCodeOnSuccess: 200,
+    respHeaderOnSuccess: '',
+    respBodyOnSuccess: '{favorites: [{id: 1, ...}, {id: 2, ...}, {} ]}',
+    respCodeOnFail: 404,
+    respHeaderOnFail: '',
+    respBodyOnFail: ''
+  }
+];
+
+var routesTable = document.getElementById('routesTable');
+
+for (var i = 0; i < routesData.length; i++) {
+  var row = document.createElement('tr');
+  var col;
+  for (column of [
+    'description',
+    'method',
+    'route',
+    'expReqHeader',
+    'expReqBody',
+    'respCodeOnSuccess',
+    'respHeaderOnSuccess',
+    'respBodyOnSuccess',
+    'respCodeOnFail',
+    'respHeaderOnFail',
+    'respBodyOnFail'
+  ]) {
+    col = document.createElement('td');
+    col.innerText = routesData[i][column];
+    row.append(col);
+  }
+  routesTable.append(row);
+}
+</script>
+</body>
+</html>
