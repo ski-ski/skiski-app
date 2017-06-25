@@ -12,7 +12,8 @@ exports.seed = function(knex, Promise) {
           snow_depth: 1
         },
 
-        {id: 2,
+        {
+          id: 2,
           name: 'Heavenly',
           windspeed: 12,
           temperature: 60,
@@ -54,7 +55,7 @@ exports.seed = function(knex, Promise) {
 
         {
           id: 7,
-          name: 'Sierra',
+          name: 'Sierra-at-Tahoe',
           windspeed: 5,
           temperature: 43,
           snow_depth: 2
