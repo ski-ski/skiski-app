@@ -55,7 +55,7 @@ exports.seed = function(knex, Promise) {
 
         {
           id: 7,
-          name: 'Sierra-at-Tahoe',
+          name: 'Sierra',
           windspeed: 5,
           temperature: 43,
           snow_depth: 2
