@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const Users = require('../models/Users');
+const Users = require('../repositories/Users');
+
+
+/**
+ * @api {get} /users/ Request all information for all users
+ * @apiName GetUsers
+ * @apiGroup Users
+ *
+ * @apiSuccess {Object[]} All user data.
+ */
 
 router.get('/users', (req, res) => {
   let users = new Users();
