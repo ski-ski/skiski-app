@@ -1,6 +1,6 @@
 
 const knex = require('../knex');
-
+const bcrypt = require('bcrypt');
 class Users {
   constructor() {}
 

@@ -10,7 +10,7 @@ exports.seed = function(knex, Promise) {
           last_name: 'Morse',
           email: 'steve@gmail.com',
           hashed_password:
-            '$2a$12$C9AYYmcLVGYlGoO4vSZTPud9ArJwbGRsJ6TUsNULzR48z8fOnTXbS'
+            '$2a$10$Sc1JH2uOZ1Cv0t3hoWoc1OyWCdy6Q6BP07b8zWqjT2A2bBbZr6Ab6'
         },
         {
           id: 2,
@@ -18,7 +18,7 @@ exports.seed = function(knex, Promise) {
           last_name: 'Vaughan',
           email: 'steve2@gmail.com',
           hashed_password:
-            '$2a$12$C9AYYmcLVGYlGoO4vSZTPubGRsJ6d9ArJULzR48z8fOnTXbSwTUsN'
+            '$2a$10$ha5HzJWYkRcwQLhT9kHb.eZJ0sT26edJnHAcbpPrF5tMqo3w26Ux2'
         }
       ]);
     })
