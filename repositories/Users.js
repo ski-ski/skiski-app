@@ -8,9 +8,9 @@ class Users {
     return knex('users');
   }
 
-  // getUser(id) {
-  //   return knex('users').where('id', id);
-  // }
+  getUser(id) {
+    return knex('users').where('id', id);
+  }
 }
 
 module.exports = Users;
