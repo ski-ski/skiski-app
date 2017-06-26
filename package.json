@@ -2,12 +2,12 @@
   "name": "skiski-app",
   "version": "1.0.0",
   "description": "Ski trail ratings",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "knex": "knex",
     "test": "mocha",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "dependencies": {
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
     "knex": "^0.13.0",
