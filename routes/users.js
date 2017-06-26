@@ -26,7 +26,13 @@ router.get('/users', (req, res) => {
     });
 });
 
-
+/**
+ * @api {get} /users/:id Request user information
+ * @apiName GetUser
+ * @apiGroup Users
+ *@apiParam {Number} id Users unique id
+ * @apiSuccess {Object[]} All user data.
+ */
 router.get('/users/:id', (req, res) => {
   let users = new Users();
   let promise = users.getUser(req.params.id);
