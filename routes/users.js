@@ -10,7 +10,6 @@ const Users = require('../repositories/Users');
  *
  * @apiSuccess {Object[]} All user data.
  */
-
 router.get('/users', (req, res) => {
   let users = new Users();
   let promise = users.getUsers();
