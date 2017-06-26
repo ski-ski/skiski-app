@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Routes</title>
+    <title>Skiski Routes</title>
     <meta charset="utf-8"/>
     <style>
       body {
@@ -73,7 +73,7 @@ let routesData = [
     expReqBody: '',
     respCodeOnSuccess: 200,
     respHeaderOnSuccess: '',
-    respBodyOnSuccess: 'true if there is a JWT in request header. false if not',
+    respBodyOnSuccess: 'true if there is a JWT in request header, else false',
     respCodeOnFail: 400,
     respHeaderOnFail: '',
     respBodyOnFail: ''
@@ -99,7 +99,7 @@ let routesData = [
     expReqBody: '{email: xxx, password: yyy, first_name: xxx, ...}',
     respCodeOnSuccess: 200,
     respHeaderOnSuccess: 'JWT',
-    respBodyOnSuccess: '{  same as request body, except the password  }',
+    respBodyOnSuccess: '{ same as request body, except the password }',
     respCodeOnFail: 409,
     respHeaderOnFail: '',
     respBodyOnFail: 'Email already in use'
@@ -112,7 +112,7 @@ let routesData = [
     expReqBody: '',
     respCodeOnSuccess: 200,
     respHeaderOnSuccess: '',
-    respBodyOnSuccess: '{  all user data except password  }',
+    respBodyOnSuccess: '{ all user data except password }',
     respCodeOnFail: 404,
     respHeaderOnFail: '',
     respBodyOnFail: 'user does not exist'
