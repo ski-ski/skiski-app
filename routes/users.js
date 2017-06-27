@@ -23,7 +23,7 @@ router.get('/users', (req, res) => {
       if (!users) {
         res.status(404).send('No users found');
       }
-      res.json(users);
+      res.json(humps.camelizeKeys(users));
     })
     .catch(err => {
       res.status(500).send(err);
@@ -46,7 +46,7 @@ router.get('/users/:id', (req, res) => {
     if (!user) {
       res.status(404).send('Not found');
     }
-    res.json(user);
+    res.json(humps.camelizeKeys(user));
   })
   .catch(err => {
     res.status(500).send(err);
