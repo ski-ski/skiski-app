@@ -20,6 +20,12 @@ class Users {
 		return knex('users').first().where('email', email)
 	}
 
+ updateUser(id, userData) {
+  return knex('users')
+  .update(userData, ['id', 'first_name', 'last_name', 'email'])
+  .where('id', id);
+ }
+
 	tryLoginUser(email, password){
 		return knex('users').select('hashed_password').first().where({email})
 		.then(queryResult => {
