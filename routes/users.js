@@ -147,5 +147,30 @@ router.post('/users', (req, res, next) => {
       next(err);
     });
 });
+router.delete('/Users/:id', (req, res) => {
+  let users = new Users();
+  let id = req.params.id;
+
+  if (isNaN(id)) {
+    return res.sendStatus(404);
+  }
+
+  let promiseFromQuery = users.deleteUser(id);
+
+  promiseFromQuery
+    .then((user) => {
+      if (!user[0]) {
+        res.sendStatus(404);
+      } else {
+        var camelized = humps.camelizeKeys(user[0]);
+        delete camelized.id;
+        res.send(camelized);
+      }
+  })
+    .catch(err => {
+      res.status(500).send(err);
+  });
+});
+
 
 module.exports = router;
