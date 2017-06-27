@@ -17,29 +17,29 @@ suite('routes token', addDatabaseHooks(() => {
       .expect(200, 'false', done);
   });
 
-  // test('POST /token', (done) => {
-  //   request(server)
-  //     .post('/token')
-  //     .set('Accept', 'application/json')
-  //     .set('Content-Type', 'application/json')
-  //     .send({
-  //       email: 'steve@gmail.com',
-  //       password: 'stevem'
-  //     })
-  //     .expect('set-cookie', /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=\/;.+HttpOnly/)
-  //     .expect((res) => {
-  //       delete res.body.createdAt;
-  //       delete res.body.updatedAt;
-  //     })
-  //     .expect(200, {
-  //       id: 1,
-  //       firstName: 'Steve',
-  //       lastName: 'Morse',
-  //       email: 'steve@gmail.com'
-  //     })
-  //     .expect('Content-Type', /json/)
-  //     .end(done);
-  // });
+  test('POST /token', (done) => {
+    request(server)
+      .post('/token')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .send({
+        email: 'steve@gmail.com',
+        password: 'stevem'
+      })
+      .expect('set-cookie', /token=[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+; Path=\/;.+HttpOnly/)
+      .expect((res) => {
+        delete res.body.createdAt;
+        delete res.body.updatedAt;
+      })
+      .expect(200, {
+        id: 1,
+        firstName: 'Steve',
+        lastName: 'Morse',
+        email: 'steve@gmail.com'
+      })
+      .expect('Content-Type', /json/)
+      .end(done);
+  });
 
   // test('GET /token with token', (done) => {
   //   const agent = request.agent(server);
