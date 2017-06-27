@@ -1,6 +1,8 @@
 process.env.NODE_ENV = 'test';
 
 const { suite, test } = require('mocha');
+const bcrypt = require('bcrypt');
+const assert = require('chai').assert
 const request = require('supertest');
 const knex = require('../knex');
 const app = require('../app');
@@ -49,8 +51,7 @@ suite('routes users', addDatabaseHooks(() => {
         id: 3,
         firstName: 'Steve',
         lastName: 'Howe',
-        email: 'steveh@gmail.com',
-        password: password
+        email: 'steveh@gmail.com'
       })
       .expect('Content-Type', /json/)
       .end((httpErr, _res) => {
