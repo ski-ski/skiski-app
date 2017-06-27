@@ -32,5 +32,57 @@ suite('routes users', addDatabaseHooks(() => {
         done);
   });
 
+  test('POST /users', done => {
+    const password = 'steveh';
+
+    request(app)
+      .post('/users')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .send({
+        firstName: 'Steve',
+        lastName: 'Howe',
+        email: 'steveh@gmail.com',
+        password: password
+      })
+      .expect(200, {
+        id: 3,
+        firstName: 'Steve',
+        lastName: 'Howe',
+        email: 'steveh@gmail.com',
+        password: password
+      })
+      .expect('Content-Type', /json/)
+      .end((httpErr, _res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+
+        knex('users')
+          .where('id', 3)
+          .first()
+          .then((user) => {
+            const hashedPassword = user.hashed_password;
+
+            delete user.hashed_password;
+
+            assert.deepEqual(user, {
+              id: 3,
+              first_name: 'Steve',
+              last_name: 'Howe',
+              email: 'steveh@gmail.com'
+            });
+
+            const isMatch = bcrypt.compareSync(password, hashedPassword);
+
+            assert.isTrue(isMatch, "passwords don't match");
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
+      });
+  });
+
   })
 );
