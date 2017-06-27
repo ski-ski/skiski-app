@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const humps = require('humps');
+const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
 
@@ -112,7 +113,19 @@ router.get('/users/:id', (req, res) => {
     res.status(500).send(err);
   });
 });
+router.post('/users/:id', (req, res) =>{
+  let users = new Users();
+  let {first_name, last_name, email,hashed_password} = humps.decamelizeKeys(req.body);
+  let validFields = {first_name, last_name, email, hashed_password}
+  let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
+  let promise = users.updateUser(req.params.id, filteredObject);
+  promise
+  .then((user) => {
+    res.json(humps.camelizeKeys(user));
+  });
 
+
+});
 router.post('/users', (req, res, next) => {
   let users = new Users();
   const password = req.body.password;
