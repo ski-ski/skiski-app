@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const knex = require('../knex.js');
 const humps = require('humps');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
@@ -115,24 +114,25 @@ router.get('/users/:id', (req, res) => {
 });
 
 router.post('/users', (req, res, next) => {
+  let users = new Users();
   const password = req.body.password;
   const saltRounds = 10;
+  let userData = {
+    first_name: req.body.firstName,
+    last_name: req.body.lastName,
+    email: req.body.email
+  };
   bcrypt.hash(password, saltRounds)
     .then(passwordHash => {
-      knex('users')
-      .insert({
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
-        email: req.body.email,
-        hashed_password: passwordHash
-      }, ['id', 'first_name', 'last_name', 'email'])
-      .then((user) => {
-        res.send(humps.camelizeKeys(user[0]));
-      })
-      .catch((err) => {
-        next(err);
-      });
+      userData.hashed_password = passwordHash;
+      return users.createUser(userData);
+    })
+    .then((user) => {
+      res.send(humps.camelizeKeys(user[0]));
+    })
+    .catch((err) => {
+      next(err);
     });
-})
+});
 
 module.exports = router;
