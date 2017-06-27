@@ -5,12 +5,12 @@ process.env.NODE_ENV = 'test';
 const { suite, test } = require('mocha');
 const request = require('supertest');
 const knex = require('../knex');
-const server = require('../app');
+const app = require('../app');
 const { addDatabaseHooks } = require('./utils')
 
 suite('routes token', addDatabaseHooks(() => {
   test('GET /token without token', (done) => {
-    request(server)
+    request(app)
       .get('/token')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -18,7 +18,7 @@ suite('routes token', addDatabaseHooks(() => {
   });
 
   test('POST /token', (done) => {
-    request(server)
+    request(app)
       .post('/token')
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
@@ -42,9 +42,9 @@ suite('routes token', addDatabaseHooks(() => {
   });
 
   test('GET /token with token', (done) => {
-    const agent = request.agent(server);
+    const agent = request.agent(app);
 
-    request(server)
+    request(app)
       .post('/token')
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
@@ -68,7 +68,7 @@ suite('routes token', addDatabaseHooks(() => {
   });
 
   test('DELETE /token', (done) => {
-    request(server)
+    request(app)
       .del('/token')
       .set('Accept', 'application/json')
       .expect('set-cookie', /token=; Path=\//)
@@ -77,7 +77,7 @@ suite('routes token', addDatabaseHooks(() => {
   });
 
   test('POST /token with bad email', (done) => {
-    request(server)
+    request(app)
       .post('/token')
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
@@ -90,7 +90,7 @@ suite('routes token', addDatabaseHooks(() => {
   });
 
   test('POST /token with bad password', (done) => {
-    request(server)
+    request(app)
       .post('/token')
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
