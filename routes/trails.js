@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const humps = require('humps');
+const _ = require('lodash');
 const Trails = require('../repositories/Trails');
 // const bcrypt = require('bcrypt');
 // const jwt = require('jsonwebtoken');
@@ -41,17 +42,16 @@ router.get('/trails/:id', (req, res) => {
 
 
 // Update one
-// router.post('/trails/:id', (req, res) =>{
-//   let trails = new Trails();
-//   let {first_name, last_name, email,hashed_password} = humps.decamelizeKeys(req.body);
-//   let validFields = {first_name, last_name, email, hashed_password}
-//   let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
-//   let promise = trails.updateUser(req.params.id, filteredObject);
-//   promise
-//   .then((trail) => {
-//     res.json(humps.camelizeKeys(trail));
-//   });
-// });
+router.post('/trails/:id', (req, res) =>{
+  let trails = new Trails();
+  let {name, resort_id, difficulty} = humps.decamelizeKeys(req.body);
+  let validFields = {name, resort_id, difficulty};
+  let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
+  trails.updateTrail(req.params.id, filteredObject)
+  .then((trail) => {
+    res.json(humps.camelizeKeys(trail[0]));
+  });
+});
 
 
 // Delete one

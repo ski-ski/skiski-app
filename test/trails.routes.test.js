@@ -64,6 +64,46 @@ suite('routes trails', addDatabaseHooks(() => {
         }, done);
   });
 
+  // Update one
+  test('POST /trails:id', done => {
+    request(app)
+      .post('/trails/1')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .send({
+        name: 'GS Bowl',
+        resortId: 1,
+        difficulty: "black*2"
+      })
+      .expect(200, {
+        id: 1,
+        name: 'GS Bowl',
+        resortId: 1,
+        difficulty: "black*2"
+      })
+      .expect('Content-Type', /json/)
+      .end((httpErr, _res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex('trails')
+          .where('id', 1)
+          .first()
+          .then((trail) => {
+            assert.deepEqual(trail, {
+              id: 1,
+              name: 'GS Bowl',
+              resort_id: 1,
+              difficulty: "black*2"
+            });
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
+      });
+  });
+
   // Read all
   // test('GET /trails', done => {
   //   request(app)
