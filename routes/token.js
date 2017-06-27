@@ -6,12 +6,6 @@ const knex = require('../knex.js');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
 
-/**
- * @api {get} /token Check presence of token
- * @apiName CheckToken
- * @apiGroup token
- * @apiSuccess {boolean}
- */
 router.get('/token', (req, res) => {
   if (req.cookies.token) {
     res.status(200).send(true);

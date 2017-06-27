@@ -1,7 +1,12 @@
 {
-  "name": "Skiski",
-  "version": "0.1.0",
-  "description": "apiDoc basic example",
-  "title": "Ratings of Lake Tahoe ski trails",
-  "url": "https://github.com/ski-ski/skiski-app"
+  "title": "Ski trails ratings",
+  "url": "https://github.com/ski-ski/skiski-app",
+  "order": [
+    "GetUser",
+    "PostUser"
+  ],
+  "template": {
+  	"withCompare": true,
+  	"withGenerator": true
+  }
 }
