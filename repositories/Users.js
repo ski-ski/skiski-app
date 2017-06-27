@@ -4,6 +4,11 @@ const bcrypt = require('bcrypt');
 class Users {
   constructor() {}
 
+  createUser(userData) {
+    return knex('users')
+    .insert(userData, ['id', 'first_name', 'last_name', 'email']);
+  }
+
   getUsers() {
     return knex('users');
   }
