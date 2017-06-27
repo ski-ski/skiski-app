@@ -50,19 +50,19 @@ suite('routes trails', addDatabaseHooks(() => {
   });
 
   // Read one
-  // test('GET /trails/:id', done => {
-  //   request(app)
-  //     .get('/trails/1')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200,
-  //       {
-  //         id: 1,
-  //         name: 'GS Bowl',
-  //         resort_id: 1,
-  //         difficulty: "black"
-  //       }, done);
-  // });
+  test('GET /trails/:id', done => {
+    request(app)
+      .get('/trails/1')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200,
+        {
+          id: 1,
+          name: 'GS Bowl',
+          resortId: 1,
+          difficulty: "black"
+        }, done);
+  });
 
   // Read all
   // test('GET /trails', done => {

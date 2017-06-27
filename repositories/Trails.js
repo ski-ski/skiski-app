@@ -7,10 +7,10 @@ class Trails {
     return knex('trails').insert(trailData, '*');
   }
 
-  // getTrail(id) {
-  //   return knex('trails').where('id', id);
-  // }
-  
+  getTrail(id) {
+    return knex('trails').where('id', id);
+  }
+
   // updateTrail(id, trailData) {
   //   return knex('trails')
   //     .update(trailData, ['id', 'first_name', 'last_name', 'email'])

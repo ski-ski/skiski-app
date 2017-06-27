@@ -25,21 +25,19 @@ router.post('/trails', (req, res, next) => {
 
 
 // Read one
-// router.get('/trails', (req, res) => {
-//   let trails = new Trails();
-//   let promise = trails.getUsers();
-//
-//   promise
-//   .then(trails => {
-//     if (!trails) {
-//       res.status(404).send('No trails found');
-//     }
-//     res.json(humps.camelizeKeys(trails));
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
+router.get('/trails/:id', (req, res) => {
+  let trails = new Trails();
+  trails.getTrail(req.params.id)
+  .then(trail => {
+    if (!trail) {
+      res.status(404).send('Not found');
+    }
+    res.json(humps.camelizeKeys(trail[0]));
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
 
 
 // Update one
@@ -84,16 +82,16 @@ router.post('/trails', (req, res, next) => {
 
 
 // Read all
-// router.get('/trails/:id', (req, res) => {
+// router.get('/trails', (req, res) => {
 //   let trails = new Trails();
-//   let promise = trails.getUser(req.params.id);
+//   let promise = trails.getUsers();
 //
 //   promise
-//   .then(trail => {
-//     if (!trail) {
-//       res.status(404).send('Not found');
+//   .then(trails => {
+//     if (!trails) {
+//       res.status(404).send('No trails found');
 //     }
-//     res.json(humps.camelizeKeys(trail[0]));
+//     res.json(humps.camelizeKeys(trails));
 //   })
 //   .catch(err => {
 //     res.status(500).send(err);
