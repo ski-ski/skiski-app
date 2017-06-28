@@ -26,21 +26,21 @@ router.post('/favorites', (req, res, next) => {
 
 
 // // Read one
-// router.get('/favorites/:id', (req, res) => {
-//   let favorites = new favorites();
-//   favorites.getfavorite(req.params.id)
-//   .then(favorite => {
-//     if (!favorite) {
-//       res.status(404).send('Not found');
-//     }
-//     res.json(humps.camelizeKeys(favorite[0]));
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
-//
-//
+router.get('/favorites/:id', (req, res) => {
+  let favorites = new Favorites();
+  favorites.getFavorite(req.params.id)
+  .then(favorite => {
+    if (!favorite) {
+      res.status(404).send('Not found');
+    }
+    res.json(humps.camelizeKeys(favorite[0]));
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
+
+
 // // Update one
 // router.post('/favorites/:id', (req, res) =>{
 //   let favorites = new favorites();

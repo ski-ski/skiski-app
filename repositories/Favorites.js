@@ -7,10 +7,10 @@ class Favorites {
     return knex('favorites').insert(favoriteData, '*');
   }
 
-  // getFavorite(id) {
-  //   return knex('favorites').where('id', id);
-  // }
-  //
+  getFavorite(id) {
+    return knex('favorites').where('id', id);
+  }
+
   // updateFavorite(id, favoriteData) {
   //   return knex('favorites')
   //     .update(favoriteData, '*')

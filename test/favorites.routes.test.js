@@ -49,23 +49,20 @@ suite('routes favorites', addDatabaseHooks(() => {
       });
   });
 
-  // // Read one
-  // test('GET /favorites/:id', done => {
-  //   request(app)
-  //     .get('/favorites/1')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200, {
-  //         id: 1,
-  //         userId: 1,
-  //         trailId: 1,
-  //         rating: 4,
-	// 				review:"very good",
-	// 				createdAt: '2016-06-29T14:26:16.000Z',
-  //         updatedAt: '2016-06-29T14:26:16.000Z'
-  //       }, done);
-  // });
-  //
+  // Read one
+  test('GET /favorites/:id', done => {
+    request(app)
+      .get('/favorites/1')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200, {
+        id: 1,
+        userId: 1,
+        trailId: 2,
+        ranking: 2
+      }, done);
+  });
+
   // // Update one
   // test('POST /favorites:id', done => {
   //   request(app)
