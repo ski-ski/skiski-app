@@ -1,21 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const humps = require('humps');
-const _ = require('lodash');
-const jwt = require('jsonwebtoken');
-const Users = require('../repositories/Users');
+const bcrypt = require("bcrypt");
+const humps = require("humps");
+const _ = require("lodash");
+const jwt = require("jsonwebtoken");
+const Users = require("../repositories/Users");
 // const utils = require('./utils')
 
-
 // Sign up (Create account)
-router.post('/users', (req, res, next) => {
+router.post("/users", (req, res, next) => {
   let users = new Users();
   // Check if account already exists
-  users.getUserByEmail(req.body.email)
-  .then((existingUserData) => {
+  users.getUserByEmail(req.body.email).then(existingUserData => {
     if (existingUserData) {
-      return res.status(400).send('User already exists');
+      return res.status(400).send("User already exists");
     }
     const password = req.body.password;
     const saltRounds = 10;
@@ -24,20 +22,20 @@ router.post('/users', (req, res, next) => {
       last_name: req.body.lastName,
       email: req.body.email
     };
-    bcrypt.hash(password, saltRounds)
-    .then(passwordHash => {
-      userData.hashed_password = passwordHash;
-      return users.createUser(userData);
-    })
-    .then((user) => {
-      res.send(humps.camelizeKeys(user[0]));
-    })
-    .catch((err) => {
-      next(err);
-    });
+    bcrypt
+      .hash(password, saltRounds)
+      .then(passwordHash => {
+        userData.hashed_password = passwordHash;
+        return users.createUser(userData);
+      })
+      .then(user => {
+        res.send(humps.camelizeKeys(user[0]));
+      })
+      .catch(err => {
+        next(err);
+      });
   });
 });
-
 
 /**
  * @apiDefine UserNotFoundError
@@ -86,14 +84,14 @@ router.post('/users', (req, res, next) => {
  *
  * @apiUse UserNotFoundError
  */
-router.get('/users', (req, res) => {
+router.get("/users", (req, res) => {
   let users = new Users();
   let promise = users.getUsers();
 
   promise
     .then(users => {
       if (!users) {
-        res.status(404).send('No users found');
+        res.status(404).send("No users found");
       }
       res.json(humps.camelizeKeys(users));
     })
@@ -101,7 +99,6 @@ router.get('/users', (req, res) => {
       res.status(500).send(err);
     });
 });
-
 
 /**
  * @api {get} /user/:id Request User information
@@ -132,63 +129,65 @@ router.get('/users', (req, res) => {
  *
  * @apiUse UserNotFoundError
 */
-router.get('/users/:id', (req, res) => {
+router.get("/users/:id", (req, res) => {
   let users = new Users();
   let promise = users.getUser(req.params.id);
 
   promise
-  .then(user => {
-    if (!user) {
-      res.status(404).send('Not found');
-    }
-    res.json(humps.camelizeKeys(user[0]));
-  })
-  .catch(err => {
-    res.status(500).send(err);
-  });
+    .then(user => {
+      if (!user) {
+        res.status(404).send("Not found");
+      }
+      res.json(humps.camelizeKeys(user[0]));
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
 });
 
-
-router.post('/users/:id', (req, res) =>{
+router.post("/users/:id", checkUserLoggedIn, (req, res) => {
   let users = new Users();
-  let {first_name, last_name, email,hashed_password} = humps.decamelizeKeys(req.body);
-  let validFields = {first_name, last_name, email, hashed_password}
-  let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
+
+  if (Number(req.userId) !== Number(req.params.id)) {
+    return res.sendStatus(401);
+  }
+  let { first_name, last_name, email, hashed_password } = humps.decamelizeKeys(
+    req.body
+  );
+  let validFields = { first_name, last_name, email, hashed_password };
+  let filteredObject = _(validFields)
+    .omitBy(_.isUndefined)
+    .omitBy(_.isNull)
+    .value();
   let promise = users.updateUser(req.params.id, filteredObject);
-  promise
-  .then((user) => {
+  promise.then(user => {
     res.json(humps.camelizeKeys(user));
   });
-
-
 });
 
-
-router.delete('/users/:id', checkUserLoggedIn, (req, res) => {
+router.delete("/users/:id", checkUserLoggedIn, (req, res) => {
   let users = new Users();
-  let id = req.params.id;
-
-  if (isNaN(id)) {
+  let userId = req.userId;
+  if (isNaN(userId)) {
     return res.sendStatus(404);
   }
 
-  let promiseFromQuery = users.deleteUser(id);
+  let promiseFromQuery = users.deleteUser(userId);
 
   promiseFromQuery
-    .then((user) => {
+    .then(user => {
       if (!user[0]) {
         res.sendStatus(404);
       } else {
         var camelized = humps.camelizeKeys(user[0]);
-        delete camelized.id;
+        delete camelized.userId;
         res.send(camelized);
       }
-  })
+    })
     .catch(err => {
       res.status(500).send(err);
-  });
+    });
 });
-
 
 function checkUserLoggedIn(req, res, next) {
   if (!req.cookies.token) {
@@ -200,6 +199,5 @@ function checkUserLoggedIn(req, res, next) {
     next();
   }
 }
-
 
 module.exports = router;
