@@ -59,20 +59,23 @@ suite('routes ratings', addDatabaseHooks(() => {
   });
 
   // Read one
-  // test('GET /ratings/:id', done => {
-  //   request(app)
-  //     .get('/ratings/1')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200,
-  //       {
-  //         id: 1,
-  //         name: 'GS Bowl',
-  //         resortId: 1,
-  //         difficulty: "black"
-  //       }, done);
-  // });
-  //
+  test('GET /ratings/:id', done => {
+    request(app)
+      .get('/ratings/1')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200,
+        {
+          id: 1,
+          userId: 1,
+          trailId: 1,
+          rating: 4,
+					review:"very good",
+					createdAt: '2016-06-29T14:26:16.000Z',
+          updatedAt: '2016-06-29T14:26:16.000Z'
+        }, done);
+  });
+
   // // Update one
   // test('POST /ratings:id', done => {
   //   request(app)

@@ -27,19 +27,19 @@ router.post('/ratings', (req, res, next) => {
 
 
 // Read one
-// router.get('/ratings/:id', (req, res) => {
-//   let ratings = new Ratings();
-//   ratings.getrating(req.params.id)
-//   .then(rating => {
-//     if (!rating) {
-//       res.status(404).send('Not found');
-//     }
-//     res.json(humps.camelizeKeys(rating[0]));
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
+router.get('/ratings/:id', (req, res) => {
+  let ratings = new Ratings();
+  ratings.getRating(req.params.id)
+  .then(rating => {
+    if (!rating) {
+      res.status(404).send('Not found');
+    }
+    res.json(humps.camelizeKeys(rating[0]));
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
 
 
 // Update one

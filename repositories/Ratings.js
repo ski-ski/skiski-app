@@ -7,10 +7,10 @@ class Ratings {
     return knex('ratings').insert(ratingData, '*');
   }
 
-  // getRating(id) {
-  //   return knex('ratings').where('id', id);
-  // }
-  //
+  getRating(id) {
+    return knex('ratings').where('id', id);
+  }
+
   // updateRating(id, ratingData) {
   //   return knex('ratings')
   //     .update(ratingData, '*')
