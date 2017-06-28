@@ -16,18 +16,20 @@ suite(
         .expect("Content-Type", /json/)
         .expect(200)
         .then(response => {
-          console.log(Object.keys(response.body[0]));
-          assert.deepEqual(response.body.map(i => Object.keys(i)), [
-            "id",
-            "name",
-            "city",
-            "windspeed",
-            "highTemperature",
-            "lowTemperature",
-            "snowDepth"
-          ]);
+          let resortsProps = response.body.map(i => Object.keys(i));
+          resortsProps.forEach(resortProp => {
+            assert.deepEqual(resortProp, [
+              "id",
+              "name",
+              "city",
+              "windspeed",
+              "highTemperature",
+              "lowTemperature",
+              "snowDepth"
+            ]);
+          });
+          done();
         });
-      done();
     });
 
     test("GET /resorts/:id", done => {
@@ -46,8 +48,8 @@ suite(
             "lowTemperature",
             "snowDepth"
           ]);
+          done();
         });
-      done();
     });
   })
 );
