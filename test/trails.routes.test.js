@@ -124,7 +124,8 @@ suite('routes trails', addDatabaseHooks(() => {
           .count('*')
           .where('id', 1)
           .then((records) => {
-            const count = parseInt(records[0].count); // For some reason knex returns a string
+            const count = parseInt(records[0].count);
+            // String because postgres can handle bigger numbers than JavaScript.
             assert(count === 0, 'zero records with id 1');
             done();
           })
@@ -135,61 +136,61 @@ suite('routes trails', addDatabaseHooks(() => {
   });
 
   // Read all
-  // test('GET /trails', done => {
-  //   request(app)
-  //     .get('/trails')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200,
-  //       [{
-  //         id: 1,
-  //         name: 'GS Bowl',
-  //         resort_id: 1,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Dipper Bowl',
-  //         resort_id: 2,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Sierra Grande',
-  //         resort_id: 3,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'The Wall',
-  //         resort_id: 4,
-  //         difficulty: "double-black"
-  //       },
-  //       {
-  //         id: 5,
-  //         name: "The Palisades",
-  //         resort_id: 5,
-  //         difficulty: "double-black"
-  //       },
-  //       {
-  //         id: 6,
-  //         name: 'Chukker',
-  //         resort_id: 6,
-  //         difficulty: "blue"
-  //       },
-  //       {
-  //         id: 7,
-  //         name: 'Clipper',
-  //         resort_id: 7,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 8,
-  //         name: 'South Face',
-  //         resort_id: 8,
-  //         difficulty: "black"
-  //       }
-  //     ], done);
-  // });
+  test('GET /trails', done => {
+    request(app)
+      .get('/trails')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200,
+        [{
+          id: 1,
+          name: 'GS Bowl',
+          resortId: 1,
+          difficulty: "black"
+        },
+        {
+          id: 2,
+          name: 'Dipper Bowl',
+          resortId: 2,
+          difficulty: "black"
+        },
+        {
+          id: 3,
+          name: 'Sierra Grande',
+          resortId: 3,
+          difficulty: "black"
+        },
+        {
+          id: 4,
+          name: 'The Wall',
+          resortId: 4,
+          difficulty: "double-black"
+        },
+        {
+          id: 5,
+          name: "The Palisades",
+          resortId: 5,
+          difficulty: "double-black"
+        },
+        {
+          id: 6,
+          name: 'Chukker',
+          resortId: 6,
+          difficulty: "blue"
+        },
+        {
+          id: 7,
+          name: 'Clipper',
+          resortId: 7,
+          difficulty: "black"
+        },
+        {
+          id: 8,
+          name: 'South Face',
+          resortId: 8,
+          difficulty: "black"
+        }
+      ], done);
+  });
 
 }));

@@ -21,9 +21,9 @@ class Trails {
     return knex('trails').del().where('id', id).returning('*');
   }
 
-  // getTrails() {
-  //   return knex('trails');
-  // }
+  getTrails() {
+    return knex('trails');
+  }
 }
 
 module.exports = Trails;

@@ -76,21 +76,19 @@ router.delete('/trails/:id', (req, res) => {
 
 
 // Read all
-// router.get('/trails', (req, res) => {
-//   let trails = new Trails();
-//   let promise = trails.getUsers();
-//
-//   promise
-//   .then(trails => {
-//     if (!trails) {
-//       res.status(404).send('No trails found');
-//     }
-//     res.json(humps.camelizeKeys(trails));
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
+router.get('/trails', (req, res) => {
+  let trails = new Trails();
+  trails.getTrails()
+  .then(trails => {
+    if (!trails) {
+      res.status(404).send('No trails found');
+    }
+    res.json(humps.camelizeKeys(trails));
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
 
 
 module.exports = router;
