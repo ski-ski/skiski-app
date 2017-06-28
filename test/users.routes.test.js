@@ -106,6 +106,7 @@ suite(
           password: password
         })
         .expect(400, "User already exits");
+      done();
     });
 
     test("DELETE /users/:id", done => {
