@@ -6,6 +6,38 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
 
+
+// Sign up (Create account)
+router.post('/users', (req, res, next) => {
+  let users = new Users();
+  // Check if account already exists
+  users.getUserByEmail(req.body.email)
+  .then((existingUserData) => {
+    if (existingUserData) {
+      return res.status(400).send('User already exists');
+    }
+    const password = req.body.password;
+    const saltRounds = 10;
+    let userData = {
+      first_name: req.body.firstName,
+      last_name: req.body.lastName,
+      email: req.body.email
+    };
+    bcrypt.hash(password, saltRounds)
+    .then(passwordHash => {
+      userData.hashed_password = passwordHash;
+      return users.createUser(userData);
+    })
+    .then((user) => {
+      res.send(humps.camelizeKeys(user[0]));
+    })
+    .catch((err) => {
+      next(err);
+    });
+  });
+});
+
+
 /**
  * @apiDefine UserNotFoundError
  *
@@ -69,6 +101,7 @@ router.get('/users', (req, res) => {
     });
 });
 
+
 /**
  * @api {get} /user/:id Request User information
  * @apiVersion 1.0.0
@@ -113,6 +146,8 @@ router.get('/users/:id', (req, res) => {
     res.status(500).send(err);
   });
 });
+
+
 router.post('/users/:id', (req, res) =>{
   let users = new Users();
   let {first_name, last_name, email,hashed_password} = humps.decamelizeKeys(req.body);
@@ -126,27 +161,8 @@ router.post('/users/:id', (req, res) =>{
 
 
 });
-router.post('/users', (req, res, next) => {
-  let users = new Users();
-  const password = req.body.password;
-  const saltRounds = 10;
-  let userData = {
-    first_name: req.body.firstName,
-    last_name: req.body.lastName,
-    email: req.body.email
-  };
-  bcrypt.hash(password, saltRounds)
-    .then(passwordHash => {
-      userData.hashed_password = passwordHash;
-      return users.createUser(userData);
-    })
-    .then((user) => {
-      res.send(humps.camelizeKeys(user[0]));
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
+
+
 router.delete('/users/:id', (req, res) => {
   let users = new Users();
   let id = req.params.id;

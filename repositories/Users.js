@@ -20,6 +20,10 @@ class Users {
     return knex("users").where("id", id);
   }
 
+  getUserByEmail(email) {
+    return knex("users").first().where("email", email);
+  }
+
   updateUser(id, userData) {
     return knex("users")
       .update(userData, ["id", "first_name", "last_name", "email"])

@@ -6,14 +6,7 @@ const knex = require('../knex.js');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
 
-router.get('/token', (req, res) => {
-  if (req.cookies.token) {
-    res.status(200).send(true);
-  } else {
-    res.status(200).send(false);
-  }
-});
-
+// Log in 
 router.post('/token', (req, res) => {
   let user;
   knex('users')
@@ -55,6 +48,16 @@ router.post('/token', (req, res) => {
     });
 });
 
+// Check if logged in
+router.get('/token', (req, res) => {
+  if (req.cookies.token) {
+    res.status(200).send(true);
+  } else {
+    res.status(200).send(false);
+  }
+});
+
+// Log out
 router.delete('/token', (req, res) => {
   res.clearCookie('token', { path: '/' });
   res.status(200).send(true);
