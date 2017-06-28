@@ -11,12 +11,12 @@ class Favorites {
     return knex('favorites').where('id', id);
   }
 
-  // updateFavorite(id, favoriteData) {
-  //   return knex('favorites')
-  //     .update(favoriteData, '*')
-  //     .where('id', id);
-  // }
-  //
+  updateFavorite(id, favoriteData) {
+    return knex('favorites')
+      .update(favoriteData, '*')
+      .where('id', id);
+  }
+  
   // deleteFavorite(id) {
   //   return knex('favorites').del().where('id', id).returning('*');
   // }

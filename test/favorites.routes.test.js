@@ -63,53 +63,44 @@ suite('routes favorites', addDatabaseHooks(() => {
       }, done);
   });
 
-  // // Update one
-  // test('POST /favorites:id', done => {
-  //   request(app)
-  //     .post('/favorites/1')
-  //     .set('Accept', 'application/json')
-  //     .set('Content-Type', 'application/json')
-  //     .send({
-  //       rating: 5,
-  //       review: "Fantastic"
-  //     })
-  //     .expect((res) => {
-  //       delete res.body.createdAt;
-  //       delete res.body.updatedAt;
-  //     })
-  //     .expect(200, {
-  //       id: 1,
-  //       userId: 1,
-  //       trailId: 1,
-  //       rating: 5,
-  //       review:"Fantastic"
-  //     })
-  //     .expect('Content-Type', /json/)
-  //     .end((httpErr, _res) => {
-  //       if (httpErr) {
-  //         return done(httpErr);
-  //       }
-  //       knex('favorites')
-  //         .where('id', 1)
-  //         .first()
-  //         .then((favorite) => {
-  //           delete favorite.created_at;
-  //           delete favorite.updated_at;
-  //           assert.deepEqual(favorite, {
-  //             id: 1,
-  //             user_id: 1,
-  //             trail_id: 1,
-  //             rating: 5,
-  //             review:"Fantastic"
-  //           });
-  //           done();
-  //         })
-  //         .catch((dbErr) => {
-  //           done(dbErr);
-  //         });
-  //     });
-  // });
-  //
+  // Update one
+  test('POST /favorites:id', done => {
+    request(app)
+      .post('/favorites/1')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .send({
+        ranking: 5
+      })
+      .expect(200, {
+        id: 1,
+        userId: 1,
+        trailId: 2,
+        ranking: 5
+      })
+      .expect('Content-Type', /json/)
+      .end((httpErr, _res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex('favorites')
+          .where('id', 1)
+          .first()
+          .then((favorite) => {
+            assert.deepEqual(favorite, {
+              id: 1,
+              user_id: 1,
+              trail_id: 2,
+              ranking: 5
+            });
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
+      });
+  });
+
   // // Delete one
   // test('DELETE /favorites/:id', (done) => {
   //   request(app)
@@ -120,7 +111,7 @@ suite('routes favorites', addDatabaseHooks(() => {
   //       id: 1,
   //       userId: 1,
   //       trailId: 1,
-  //       rating: 4,
+  //       ranking: 4,
   //       review:"very good",
   //       createdAt: '2016-06-29T14:26:16.000Z',
   //       updatedAt: '2016-06-29T14:26:16.000Z'
@@ -154,7 +145,7 @@ suite('routes favorites', addDatabaseHooks(() => {
   //         id: 1,
   //         userId: 1,
   //         trailId: 1,
-  //         rating: 4,
+  //         ranking: 4,
 	// 				review: "very good",
 	// 				createdAt: '2016-06-29T14:26:16.000Z',
   //         updatedAt: '2016-06-29T14:26:16.000Z'
@@ -163,7 +154,7 @@ suite('routes favorites', addDatabaseHooks(() => {
   //         id: 2,
   //         userId: 2,
   //         trailId: 2,
-  //         rating: 2,
+  //         ranking: 2,
 	// 				review: "ok",
 	// 				createdAt: '2016-06-29T14:26:16.000Z',
   //         updatedAt: '2016-06-29T14:26:16.000Z'

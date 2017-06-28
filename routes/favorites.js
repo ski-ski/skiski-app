@@ -41,19 +41,19 @@ router.get('/favorites/:id', (req, res) => {
 });
 
 
-// // Update one
-// router.post('/favorites/:id', (req, res) =>{
-//   let favorites = new favorites();
-//   let {user_id, trail_id, favorite, ranking} = humps.decamelizeKeys(req.body);
-//   let validFields = {user_id, trail_id, favorite, ranking};
-//   let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
-//   favorites.updatefavorite(req.params.id, filteredObject)
-//   .then((favorite) => {
-//     res.json(humps.camelizeKeys(favorite[0]));
-//   });
-// });
-//
-//
+// Update one
+router.post('/favorites/:id', (req, res) =>{
+  let favorites = new Favorites();
+  let {user_id, trail_id, ranking} = humps.decamelizeKeys(req.body);
+  let validFields = {user_id, trail_id, ranking};
+  let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
+  favorites.updateFavorite(req.params.id, filteredObject)
+  .then((favorite) => {
+    res.json(humps.camelizeKeys(favorite[0]));
+  });
+});
+
+
 // // Delete one
 // router.delete('/favorites/:id', (req, res) => {
 //   let favorites = new favorites();
