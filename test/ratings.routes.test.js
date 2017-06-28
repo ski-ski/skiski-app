@@ -123,38 +123,41 @@ suite('routes ratings', addDatabaseHooks(() => {
       });
   });
 
-  // // Delete one
-  // test('DELETE /ratings/:id', (done) => {
-  //   request(app)
-  //     .del('/ratings/1')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200, {
-  //       id: 1,
-  //       name: 'GS Bowl',
-  //       resortId: 1,
-  //       difficulty: "black"
-  //     })
-  //     .end((httpErr, _res) => {
-  //       if (httpErr) {
-  //         return done(httpErr);
-  //       }
-  //       knex('ratings')
-  //         .count('*')
-  //         .where('id', 1)
-  //         .then((records) => {
-  //           const count = parseInt(records[0].count);
-  //           // String because postgres can handle bigger numbers than JavaScript.
-  //           assert(count === 0, 'zero records with id 1');
-  //           done();
-  //         })
-  //         .catch((dbErr) => {
-  //           done(dbErr);
-  //         });
-  //     });
-  // });
-  //
-  // // Read all
+  // Delete one
+  test('DELETE /ratings/:id', (done) => {
+    request(app)
+      .del('/ratings/1')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200, {
+        id: 1,
+        userId: 1,
+        trailId: 1,
+        rating: 4,
+        review:"very good",
+        createdAt: '2016-06-29T14:26:16.000Z',
+        updatedAt: '2016-06-29T14:26:16.000Z'
+      })
+      .end((httpErr, _res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex('ratings')
+          .count('*')
+          .where('id', 1)
+          .then((records) => {
+            const count = parseInt(records[0].count);
+            // String because postgres can handle bigger numbers than JavaScript.
+            assert(count === 0, 'zero records with id 1');
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
+      });
+  });
+
+  // Read all
   // test('GET /ratings', done => {
   //   request(app)
   //     .get('/ratings')

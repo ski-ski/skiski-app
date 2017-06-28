@@ -17,10 +17,10 @@ class Ratings {
       .where('id', id);
   }
 
-  // deleteRating(id) {
-  //   return knex('ratings').del().where('id', id).returning('*');
-  // }
-  //
+  deleteRating(id) {
+    return knex('ratings').del().where('id', id).returning('*');
+  }
+
   // getRatings() {
   //   return knex('ratings');
   // }

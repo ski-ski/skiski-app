@@ -56,24 +56,24 @@ router.post('/ratings/:id', (req, res) =>{
 
 
 // Delete one
-// router.delete('/ratings/:id', (req, res) => {
-//   let ratings = new Ratings();
-//   let id = req.params.id;
-//   if (isNaN(id)) {
-//     return res.sendStatus(404);
-//   }
-//   ratings.deleterating(id)
-//   .then((rating) => {
-//     if (!rating[0]) {
-//       res.sendStatus(404);
-//     } else {
-//       res.send(humps.camelizeKeys(rating[0]));
-//     }
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
+router.delete('/ratings/:id', (req, res) => {
+  let ratings = new Ratings();
+  let id = req.params.id;
+  if (isNaN(id)) {
+    return res.sendStatus(404);
+  }
+  ratings.deleteRating(id)
+  .then((rating) => {
+    if (!rating[0]) {
+      res.sendStatus(404);
+    } else {
+      res.send(humps.camelizeKeys(rating[0]));
+    }
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
 
 
 // Read all
