@@ -5,6 +5,7 @@ const humps = require('humps');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
+// const utils = require('./utils')
 
 
 // Sign up (Create account)
@@ -163,7 +164,7 @@ router.post('/users/:id', (req, res) =>{
 });
 
 
-router.delete('/users/:id', (req, res) => {
+router.delete('/users/:id', checkUserLoggedIn, (req, res) => {
   let users = new Users();
   let id = req.params.id;
 
@@ -187,6 +188,18 @@ router.delete('/users/:id', (req, res) => {
       res.status(500).send(err);
   });
 });
+
+
+function checkUserLoggedIn(req, res, next) {
+  if (!req.cookies.token) {
+    res.sendStatus(401);
+  } else {
+    let userObject = jwt.decode(req.cookies.token);
+    let userId = userObject.sub.id;
+    req.userId = userId;
+    next();
+  }
+}
 
 
 module.exports = router;
