@@ -54,27 +54,27 @@ router.post('/favorites/:id', (req, res) =>{
 });
 
 
-// // Delete one
-// router.delete('/favorites/:id', (req, res) => {
-//   let favorites = new favorites();
-//   let id = req.params.id;
-//   if (isNaN(id)) {
-//     return res.sendStatus(404);
-//   }
-//   favorites.deletefavorite(id)
-//   .then((favorite) => {
-//     if (!favorite[0]) {
-//       res.sendStatus(404);
-//     } else {
-//       res.send(humps.camelizeKeys(favorite[0]));
-//     }
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
-//
-//
+// Delete one
+router.delete('/favorites/:id', (req, res) => {
+  let favorites = new Favorites();
+  let id = req.params.id;
+  if (isNaN(id)) {
+    return res.sendStatus(404);
+  }
+  favorites.deleteFavorite(id)
+  .then((favorite) => {
+    if (!favorite[0]) {
+      res.sendStatus(404);
+    } else {
+      res.send(humps.camelizeKeys(favorite[0]));
+    }
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
+
+
 // // Read all
 // router.get('/favorites', (req, res) => {
 //   let favorites = new favorites();

@@ -101,40 +101,37 @@ suite('routes favorites', addDatabaseHooks(() => {
       });
   });
 
-  // // Delete one
-  // test('DELETE /favorites/:id', (done) => {
-  //   request(app)
-  //     .del('/favorites/1')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200, {
-  //       id: 1,
-  //       userId: 1,
-  //       trailId: 1,
-  //       ranking: 4,
-  //       review:"very good",
-  //       createdAt: '2016-06-29T14:26:16.000Z',
-  //       updatedAt: '2016-06-29T14:26:16.000Z'
-  //     })
-  //     .end((httpErr, _res) => {
-  //       if (httpErr) {
-  //         return done(httpErr);
-  //       }
-  //       knex('favorites')
-  //         .count('*')
-  //         .where('id', 1)
-  //         .then((records) => {
-  //           const count = parseInt(records[0].count);
-  //           // String because postgres can handle bigger numbers than JavaScript.
-  //           assert(count === 0, 'zero records with id 1');
-  //           done();
-  //         })
-  //         .catch((dbErr) => {
-  //           done(dbErr);
-  //         });
-  //     });
-  // });
-  //
+  // Delete one
+  test('DELETE /favorites/:id', (done) => {
+    request(app)
+      .del('/favorites/1')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200, {
+        id: 1,
+        userId: 1,
+        trailId: 2,
+        ranking: 2
+      })
+      .end((httpErr, _res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex('favorites')
+          .count('*')
+          .where('id', 1)
+          .then((records) => {
+            const count = parseInt(records[0].count);
+            // String because postgres can handle bigger numbers than JavaScript.
+            assert(count === 0, 'zero records with id 1');
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
+      });
+  });
+
   // // Read all
   // test('GET /favorites', done => {
   //   request(app)

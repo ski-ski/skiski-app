@@ -16,11 +16,11 @@ class Favorites {
       .update(favoriteData, '*')
       .where('id', id);
   }
-  
-  // deleteFavorite(id) {
-  //   return knex('favorites').del().where('id', id).returning('*');
-  // }
-  //
+
+  deleteFavorite(id) {
+    return knex('favorites').del().where('id', id).returning('*');
+  }
+
   // getFavorites() {
   //   return knex('favorites');
   // }
