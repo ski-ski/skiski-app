@@ -24,13 +24,14 @@ router.get('/resorts', (req, res) => {
 
 router.get('/resorts/:id', (req, res) => {
   let resorts = new Resorts();
-  let promise = resorts.getResorts(req.params.id);
+  let promise = resorts.getResort(req.params.id);
   promise
     .then(resort => {
+			console.log('this is the resort ', resort );
       if (!resort) {
-        res.status(404).send('No users found');
+        return res.status(404).send('No users found');
       }
-      res.json(humps.camelizeKeys(resort[0]));
+				return res.json(humps.camelizeKeys(resort));
     })
     .catch(err => {
       res.status(500).send(err);

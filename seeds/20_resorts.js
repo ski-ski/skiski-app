@@ -8,65 +8,82 @@ exports.seed = function(knex, Promise) {
         {
           id: 1,
           name: 'Squaw Valley',
-          windspeed: 10, temperature: 40,
-          snow_depth: 1
+          city: 'Olympic_Valley',
+          windspeed: 0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         },
 
         {
           id: 2,
           name: 'Heavenly',
-          windspeed: 12,
-          temperature: 60,
-          snow_depth: 3
+          city: 'South_Lake_Tahoe',
+          windspeed: 0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         },
 
         {
           id: 3,
           name: 'Northstar',
-          windspeed: 4,
-          temperature: 55,
-          snow_depth: 4
+          city: 'Truckee',
+          windspeed: 0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         },
 
         {
           id: 4,
           name: 'Kirkwood',
-          windspeed: 420,
-          temperature: 62,
-          snow_depth: 2
+          city: 'South_Lake_Tahoe',
+          windspeed: 0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         },
 
         {
           id: 5,
           name:
           'Sugar Bowl',
-          windspeed: 14,
-          temperature: 33,
-          snow_depth: 6
+          city: 'Truckee',
+          windspeed: 0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         },
 
         {
           id: 6,
           name: 'Boreal',
-          windspeed: 11,
-          temperature: 100,
-          snow_depth: 3
+          city: 'Truckee',
+          windspeed: 0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         },
 
         {
           id: 7,
           name: 'Sierra',
-          windspeed: 5,
-          temperature: 43,
-          snow_depth: 2
+          city: 'South_Lake_Tahoe',
+          windspeed: 0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         },
 
         {
           id: 8,
           name: 'Alpine Meadows',
-          windspeed:2,
-          temperature: 78,
-          snow_depth: 1
+          city: 'Olympic_Valley',
+          windspeed:0,
+          high_temperature:0,
+          low_temperature:0,
+          snow_depth: 0
         }
 
       ]);
