@@ -55,30 +55,24 @@ router.post('/trails/:id', (req, res) =>{
 
 
 // Delete one
-// router.delete('/trails/:id', (req, res) => {
-//   let trails = new Trails();
-//   let id = req.params.id;
-//
-//   if (isNaN(id)) {
-//     return res.sendStatus(404);
-//   }
-//
-//   let promiseFromQuery = trails.deleteUser(id);
-//
-//   promiseFromQuery
-//     .then((trail) => {
-//       if (!trail[0]) {
-//         res.sendStatus(404);
-//       } else {
-//         var camelized = humps.camelizeKeys(trail[0]);
-//         delete camelized.id;
-//         res.send(camelized);
-//       }
-//   })
-//     .catch(err => {
-//       res.status(500).send(err);
-//   });
-// });
+router.delete('/trails/:id', (req, res) => {
+  let trails = new Trails();
+  let id = req.params.id;
+  if (isNaN(id)) {
+    return res.sendStatus(404);
+  }
+  trails.deleteTrail(id)
+  .then((trail) => {
+    if (!trail[0]) {
+      res.sendStatus(404);
+    } else {
+      res.send(humps.camelizeKeys(trail[0]));
+    }
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
 
 
 // Read all

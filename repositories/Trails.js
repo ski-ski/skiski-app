@@ -17,9 +17,9 @@ class Trails {
       .where('id', id);
   }
 
-  // deleteTrail(id) {
-  //   return knex('trails').del().where('id', id).returning('*');
-  // }
+  deleteTrail(id) {
+    return knex('trails').del().where('id', id).returning('*');
+  }
 
   // getTrails() {
   //   return knex('trails');

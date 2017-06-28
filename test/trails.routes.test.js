@@ -104,6 +104,36 @@ suite('routes trails', addDatabaseHooks(() => {
       });
   });
 
+  // Delete one
+  test('DELETE /trails/:id', (done) => {
+    request(app)
+      .del('/trails/1')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200, {
+        id: 1,
+        name: 'GS Bowl',
+        resortId: 1,
+        difficulty: "black"
+      })
+      .end((httpErr, _res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex('trails')
+          .count('*')
+          .where('id', 1)
+          .then((records) => {
+            const count = parseInt(records[0].count); // For some reason knex returns a string
+            assert(count === 0, 'zero records with id 1');
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
+      });
+  });
+
   // Read all
   // test('GET /trails', done => {
   //   request(app)
