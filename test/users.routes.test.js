@@ -92,5 +92,35 @@ suite(
             });
         });
     });
+    test("DELETE /users/:id", done => {
+      request(app)
+        .del("/users/1")
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200, {
+          firstName: "Steve",
+          lastName: "Morse",
+          email: "steve@gmail.com",
+          hashedPassword:
+            "$2a$10$Sc1JH2uOZ1Cv0t3hoWoc1OyWCdy6Q6BP07b8zWqjT2A2bBbZr6Ab6"
+        })
+        .end((httpErr, _res) => {
+          if (httpErr) {
+            return done(httpErr);
+          }
+          knex("users")
+            .count("*")
+            .where("id", 1)
+            .then(records => {
+              const count = parseInt(records[0].count);
+              // String because postgres can handle bigger numbers than JavaScript.
+              assert(count === 0, "zero records with id 1");
+              done();
+            })
+            .catch(dbErr => {
+              done(dbErr);
+            });
+        });
+    });
   })
 );
