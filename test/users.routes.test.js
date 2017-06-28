@@ -92,6 +92,22 @@ suite(
             });
         });
     });
+    test("POST /users when user already exists", done => {
+      const password = "stevem";
+
+      request(app)
+        .post("/users")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .send({
+          firstName: "Steve",
+          lastName: "Morse",
+          email: "steve@gmail.com",
+          password: password
+        })
+        .expect(400, "User already exits");
+    });
+
     test("DELETE /users/:id", done => {
       request(app)
         .del("/users/1")
