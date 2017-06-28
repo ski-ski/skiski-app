@@ -43,16 +43,16 @@ router.get('/ratings/:id', (req, res) => {
 
 
 // Update one
-// router.post('/ratings/:id', (req, res) =>{
-//   let ratings = new Ratings();
-//   let {name, resort_id, difficulty} = humps.decamelizeKeys(req.body);
-//   let validFields = {name, resort_id, difficulty};
-//   let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
-//   ratings.updaterating(req.params.id, filteredObject)
-//   .then((rating) => {
-//     res.json(humps.camelizeKeys(rating[0]));
-//   });
-// });
+router.post('/ratings/:id', (req, res) =>{
+  let ratings = new Ratings();
+  let {user_id, trail_id, rating, review} = humps.decamelizeKeys(req.body);
+  let validFields = {user_id, trail_id, rating, review};
+  let filteredObject =  _(validFields).omitBy(_.isUndefined).omitBy(_.isNull).value();
+  ratings.updateRating(req.params.id, filteredObject)
+  .then((rating) => {
+    res.json(humps.camelizeKeys(rating[0]));
+  });
+});
 
 
 // Delete one

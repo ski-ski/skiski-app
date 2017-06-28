@@ -76,46 +76,53 @@ suite('routes ratings', addDatabaseHooks(() => {
         }, done);
   });
 
-  // // Update one
-  // test('POST /ratings:id', done => {
-  //   request(app)
-  //     .post('/ratings/1')
-  //     .set('Accept', 'application/json')
-  //     .set('Content-Type', 'application/json')
-  //     .send({
-  //       name: 'GS Bowl',
-  //       resortId: 1,
-  //       difficulty: "black*2"
-  //     })
-  //     .expect(200, {
-  //       id: 1,
-  //       name: 'GS Bowl',
-  //       resortId: 1,
-  //       difficulty: "black*2"
-  //     })
-  //     .expect('Content-Type', /json/)
-  //     .end((httpErr, _res) => {
-  //       if (httpErr) {
-  //         return done(httpErr);
-  //       }
-  //       knex('ratings')
-  //         .where('id', 1)
-  //         .first()
-  //         .then((rating) => {
-  //           assert.deepEqual(rating, {
-  //             id: 1,
-  //             name: 'GS Bowl',
-  //             resort_id: 1,
-  //             difficulty: "black*2"
-  //           });
-  //           done();
-  //         })
-  //         .catch((dbErr) => {
-  //           done(dbErr);
-  //         });
-  //     });
-  // });
-  //
+  // Update one
+  test('POST /ratings:id', done => {
+    request(app)
+      .post('/ratings/1')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .send({
+        rating: 5,
+        review: "Fantastic"
+      })
+      .expect((res) => {
+        delete res.body.createdAt;
+        delete res.body.updatedAt;
+      })
+      .expect(200, {
+        id: 1,
+        userId: 1,
+        trailId: 1,
+        rating: 5,
+        review:"Fantastic"
+      })
+      .expect('Content-Type', /json/)
+      .end((httpErr, _res) => {
+        if (httpErr) {
+          return done(httpErr);
+        }
+        knex('ratings')
+          .where('id', 1)
+          .first()
+          .then((rating) => {
+            delete rating.created_at;
+            delete rating.updated_at;
+            assert.deepEqual(rating, {
+              id: 1,
+              user_id: 1,
+              trail_id: 1,
+              rating: 5,
+              review:"Fantastic"
+            });
+            done();
+          })
+          .catch((dbErr) => {
+            done(dbErr);
+          });
+      });
+  });
+
   // // Delete one
   // test('DELETE /ratings/:id', (done) => {
   //   request(app)

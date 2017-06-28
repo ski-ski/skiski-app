@@ -11,12 +11,12 @@ class Ratings {
     return knex('ratings').where('id', id);
   }
 
-  // updateRating(id, ratingData) {
-  //   return knex('ratings')
-  //     .update(ratingData, '*')
-  //     .where('id', id);
-  // }
-  //
+  updateRating(id, ratingData) {
+    return knex('ratings')
+      .update(ratingData, '*')
+      .where('id', id);
+  }
+
   // deleteRating(id) {
   //   return knex('ratings').del().where('id', id).returning('*');
   // }
