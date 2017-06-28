@@ -21,9 +21,9 @@ class Favorites {
     return knex('favorites').del().where('id', id).returning('*');
   }
 
-  // getFavorites() {
-  //   return knex('favorites');
-  // }
+  getFavorites() {
+    return knex('favorites');
+  }
 };
 
 module.exports = Favorites;

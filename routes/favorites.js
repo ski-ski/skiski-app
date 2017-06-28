@@ -75,20 +75,20 @@ router.delete('/favorites/:id', (req, res) => {
 });
 
 
-// // Read all
-// router.get('/favorites', (req, res) => {
-//   let favorites = new favorites();
-//   favorites.getfavorites()
-//   .then(favorites => {
-//     if (!favorites) {
-//       res.status(404).send('No favorites found');
-//     }
-//     res.json(humps.camelizeKeys(favorites));
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
+// Read all
+router.get('/favorites', (req, res) => {
+  let favorites = new Favorites();
+  favorites.getFavorites()
+  .then(favorites => {
+    if (!favorites) {
+      res.status(404).send('No favorites found');
+    }
+    res.json(humps.camelizeKeys(favorites));
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
 
 
 module.exports = router;
