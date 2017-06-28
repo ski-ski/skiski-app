@@ -147,7 +147,7 @@ router.post('/users', (req, res, next) => {
       next(err);
     });
 });
-router.delete('/Users/:id', (req, res) => {
+router.delete('/users/:id', (req, res) => {
   let users = new Users();
   let id = req.params.id;
 

@@ -11,9 +11,9 @@ class Resorts {
   getResorts() {
 		let ids;
 		return knex('resorts').select('city', 'id')
-		.then(cities => {
-			ids = cities.map(city => city.id)
-			let arr = cities.map(cityName => rp(`http://api.wunderground.com/api/18baf686d82d4e8b/forecast10day/q/CA/${cityName.city}.json`))
+		.then(citiesAndIds => {
+			ids = citiesAndIds.map(city => city.id)
+			let arr = citiesAndIds.map(cityName => rp(`http://api.wunderground.com/api/18baf686d82d4e8b/forecast10day/q/CA/${cityName.city}.json`))
 			return Promise.all(arr);
 		})
 		.then(resortsData => {
