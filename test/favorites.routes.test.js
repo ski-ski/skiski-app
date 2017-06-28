@@ -132,31 +132,31 @@ suite('routes favorites', addDatabaseHooks(() => {
       });
   });
 
-  // // Read all
-  // test('GET /favorites', done => {
-  //   request(app)
-  //     .get('/favorites')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200, [{
-  //         id: 1,
-  //         userId: 1,
-  //         trailId: 1,
-  //         ranking: 4,
-	// 				review: "very good",
-	// 				createdAt: '2016-06-29T14:26:16.000Z',
-  //         updatedAt: '2016-06-29T14:26:16.000Z'
-  //       },
-  //       {
-  //         id: 2,
-  //         userId: 2,
-  //         trailId: 2,
-  //         ranking: 2,
-	// 				review: "ok",
-	// 				createdAt: '2016-06-29T14:26:16.000Z',
-  //         updatedAt: '2016-06-29T14:26:16.000Z'
-  //       }
-  //     ], done);
-  // });
+  // Read all
+  test('GET /favorites', done => {
+    request(app)
+      .get('/favorites')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200, [{
+          id: 1,
+          userId: 1,
+          trailId: 2,
+          ranking: 2
+        },
+        {
+          id: 2,
+          userId: 2,
+          trailId: 1,
+          ranking: 5
+        },
+        {
+          id: 3,
+          userId: 2,
+          trailId: 2,
+          ranking: 2
+        }
+      ], done);
+  });
 
 }));
