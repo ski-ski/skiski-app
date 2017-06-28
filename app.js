@@ -10,11 +10,15 @@ if (process.env.NODE_ENV !== 'production') {
 const users = require('./routes/users');
 const token = require('./routes/token');
 const resorts = require('./routes/resorts');
+const trails = require('./routes/trails');
+
 app.use(bodyParser.json());
 app.use(cookieParser());
+
 app.use(users);
 app.use(token);
 app.use(resorts);
+app.use(trails);
 
 app.use((req, res) => {
   res.sendStatus(404);
@@ -25,3 +29,4 @@ app.listen(portNumber, () => {
 });
 
 module.exports = app;
+
