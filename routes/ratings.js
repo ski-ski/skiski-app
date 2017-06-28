@@ -77,19 +77,19 @@ router.delete('/ratings/:id', (req, res) => {
 
 
 // Read all
-// router.get('/ratings', (req, res) => {
-//   let ratings = new Ratings();
-//   ratings.getRatings()
-//   .then(ratings => {
-//     if (!ratings) {
-//       res.status(404).send('No ratings found');
-//     }
-//     res.json(humps.camelizeKeys(ratings));
-//   })
-//   .catch(err => {
-//     res.status(500).send(err);
-//   });
-// });
+router.get('/ratings', (req, res) => {
+  let ratings = new Ratings();
+  ratings.getRatings()
+  .then(ratings => {
+    if (!ratings) {
+      res.status(404).send('No ratings found');
+    }
+    res.json(humps.camelizeKeys(ratings));
+  })
+  .catch(err => {
+    res.status(500).send(err);
+  });
+});
 
 
 module.exports = router;

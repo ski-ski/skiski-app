@@ -21,9 +21,9 @@ class Ratings {
     return knex('ratings').del().where('id', id).returning('*');
   }
 
-  // getRatings() {
-  //   return knex('ratings');
-  // }
+  getRatings() {
+    return knex('ratings');
+  }
 }
 
 module.exports = Ratings;

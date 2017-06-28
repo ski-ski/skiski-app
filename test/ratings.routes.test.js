@@ -64,8 +64,7 @@ suite('routes ratings', addDatabaseHooks(() => {
       .get('/ratings/1')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
-      .expect(200,
-        {
+      .expect(200, {
           id: 1,
           userId: 1,
           trailId: 1,
@@ -158,61 +157,30 @@ suite('routes ratings', addDatabaseHooks(() => {
   });
 
   // Read all
-  // test('GET /ratings', done => {
-  //   request(app)
-  //     .get('/ratings')
-  //     .set('Accept', 'application/json')
-  //     .expect('Content-Type', /json/)
-  //     .expect(200,
-  //       [{
-  //         id: 1,
-  //         name: 'GS Bowl',
-  //         resortId: 1,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 2,
-  //         name: 'Dipper Bowl',
-  //         resortId: 2,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Sierra Grande',
-  //         resortId: 3,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'The Wall',
-  //         resortId: 4,
-  //         difficulty: "double-black"
-  //       },
-  //       {
-  //         id: 5,
-  //         name: "The Palisades",
-  //         resortId: 5,
-  //         difficulty: "double-black"
-  //       },
-  //       {
-  //         id: 6,
-  //         name: 'Chukker',
-  //         resortId: 6,
-  //         difficulty: "blue"
-  //       },
-  //       {
-  //         id: 7,
-  //         name: 'Clipper',
-  //         resortId: 7,
-  //         difficulty: "black"
-  //       },
-  //       {
-  //         id: 8,
-  //         name: 'South Face',
-  //         resortId: 8,
-  //         difficulty: "black"
-  //       }
-  //     ], done);
-  // });
+  test('GET /ratings', done => {
+    request(app)
+      .get('/ratings')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200, [{
+          id: 1,
+          userId: 1,
+          trailId: 1,
+          rating: 4,
+					review: "very good",
+					createdAt: '2016-06-29T14:26:16.000Z',
+          updatedAt: '2016-06-29T14:26:16.000Z'
+        },
+        {
+          id: 2,
+          userId: 2,
+          trailId: 2,
+          rating: 2,
+					review: "ok",
+					createdAt: '2016-06-29T14:26:16.000Z',
+          updatedAt: '2016-06-29T14:26:16.000Z'
+        }
+      ], done);
+  });
 
 }));
