@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser')
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+const path = require('path');
+
 const users = require('./routes/users');
 const token = require('./routes/token');
 const resorts = require('./routes/resorts');
@@ -16,6 +18,8 @@ const favorites = require('./routes/favorites');
 
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use('/apidoc', express.static(path.join(__dirname, 'apidoc')));
 
 app.use(users);
 app.use(token);
