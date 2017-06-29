@@ -62,10 +62,10 @@ router.post("/users", (req, res, next) => {
  *
  * @apiSuccess {Object[]} users Array of user records.
  *
- * @apiSuccess {Number}   id            User ID.
- * @apiSuccess {String}   firstName     First name.
- * @apiSuccess {String}   lastName      Last name.
- * @apiSuccess {String}   email         Email address.
+ * @apiSuccess {Number}   users.id            User ID.
+ * @apiSuccess {String}   users.firstName     First name.
+ * @apiSuccess {String}   users.lastName      Last name.
+ * @apiSuccess {String}   users.email         Email address.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
