@@ -6,33 +6,70 @@ const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const Users = require("../repositories/Users");
 
+/**
+ * @apiDefine NotFoundError
+ *
+ * @apiError NotFoundError The requested path was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *
+ *       "Not found"
+ *
+ */
+
+/**
+  * @apiDefine UnAuthorized
+  *
+  * @apiError UnAuthorized The user is not authorized to access this route.
+  *
+  * @apiErrorExample Error-Response:
+  *     HTTP/1.1 401
+  *
+  *    "Not authorized"
+  *
+*/
+
+/**
+ * @apiDefine ServerError
+ *
+ * @apiError ServerError Interal server error.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 505 Interal Server Error
+ *
+ *     "{}"
+ *
+ */
+
 
 /**
  * @api {post} /users Create user account
  * @apiVersion 1.0.0
+ * @apiName PostUser
  * @apiGroup Users
+ *
+ * @apiDescription Creates a new user account.
  *
  * @apiParam {String} firstName First name
  * @apiParam {String} lastName Last name
  * @apiParam {String} email Email address
- * @apiParamExample {json} Input
- *    {
- *      "firstName": "John",
- *      "lastName": "Doe",
- *      "email": "john.doe@gmail.com"
- *    }
+ *
+ * @apiExample Example usage:
+ * curl -d 'firstName=John&lastName=Doe&email=john.doe@gmail.com' http://localhost/users
  *
  * @apiSuccess {Number} id User ID
  * @apiSuccess {String} firstName First name
  * @apiSuccess {String} lastName Last name
  * @apiSuccess {String} email Email address
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 1,
- *      firstName: "John",
- *      lastName: "Doe",
- *      email: "john.doe@gmail.com"
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": 1,
+ *     "firstName": "John",
+ *     "lastName": "Doe",
+ *     "email": "john.doe@gmail.com"
  *    }
  *
  * @apiErrorExample {String} Create error
@@ -76,30 +113,40 @@ router.post("/users", (req, res, next) => {
 /**
  * @api {get} /users List all users
  * @apiVersion 1.0.0
+ * @apiName GetUsers
  * @apiGroup Users
+ *
+ * @apiDescription Show a list of all users
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/users
  *
  * @apiSuccess {Object[]} users Array of user records
  * @apiSuccess {Number} users.id User ID
  * @apiSuccess {String} users.firstName First name
  * @apiSuccess {String} users.lastName Last name
  * @apiSuccess {String} users.email Email address
- * @apiSuccessExample {json} Success
- *     HTTP/1.1 200 OK
- *     [{
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   [
+ *     {
  *       "id": "1",
  *       "firstName": "Jane",
  *       "lastName": "Doe",
  *       "email": "jane.doe@gmail.com"
- *      },
- *      {
+ *     },
+ *     {
  *       "id": "2",
  *       "firstName": "John",
  *       "lastName": "Doe",
  *       "email": "john.doe@gmail.com"
- *      }]
+ *     }
+ *   ]
  *
- * @apiErrorExample {json} List error
- *    HTTP/1.1 500 Internal Server Error
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
  */
 router.get("/users", (req, res) => {
   let users = new Users();
@@ -120,26 +167,33 @@ router.get("/users", (req, res) => {
 
 /**
  * @api {get} /user/:id Request User information
- * @apiGroup Users
  * @apiVersion 1.0.0
+ * @apiGroup Users
+ * @apiName GetUser
  *
- * @apiParam {id} id User id
- * @apiSuccess {String} id User ID
- * @apiSuccess {String} firstName First name
- * @apiSuccess {String} lastName Last name
- * @apiSuccess {String} email Email address
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *     {
- *       "id": "2",
- *       "firstName": "John",
- *       "lastName": "Doe",
- *       "email": "john.doe@gmail.com",
- *       "hashedPassword": "$2a$12$C9AYYmcLVGYlGoO4...."
- *     }
+ * @apiDescription Get information about a particular user
  *
- * @apiErrorExample {json} User not found
- *    HTTP/1.1 404 Not Found
+ * @apiParam {Number} id User id
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/users/1
+ *
+ * @apiSuccess {String} id          User ID
+ * @apiSuccess {String} firstName   First name
+ * @apiSuccess {String} lastName    Last name
+ * @apiSuccess {String} email       Email address
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": "2",
+ *     "firstName": "John",
+ *     "lastName": "Doe",
+ *     "email": "john.doe@gmail.com",
+ *     "hashedPassword": "$2a$12$C9AYYmcLVGYlGoO4...."
+ *   }
+ *
+ * @apiUse NotFoundError
  */
 router.get("/users/:id", (req, res) => {
   let users = new Users();
@@ -160,29 +214,29 @@ router.get("/users/:id", (req, res) => {
 
 /**
  * @api {post} /users/:id Update a user
- * @apiGroup Users
  * @apiVersion 1.0.0
+ * @apiName UpdateUser
+ * @apiGroup Users
  *
- * @apiParam {id} id User id
+ * @apiDescription Update user information
+ *
+ * @apiParam {Number} id User id
  * @apiParam {String} firstName First name
  * @apiParam {String} lastName Last name
  * @apiParam {String} email Email address
- * @apiParamExample {json} Input
- *    {
- *      "firstName": "Johnny"
- *    }
+ * @apiExample Example usage:
+ * curl -d 'firstName=Johnny' http://localhost/trails
  *
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 No Content
- *     {
- *       "id": "2",
- *       "firstName": "Johnny",
- *       "lastName": "Doe",
- *       "email": "john.doe@gmail.com"
- *     }
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 204 No Content
+ *   {
+ *     "id": "2",
+ *     "firstName": "Johnny",
+ *     "lastName": "Doe",
+ *     "email": "john.doe@gmail.com"
+ *   }
  *
- * @apiErrorExample {json} Update error
- *    HTTP/1.1 500 Internal Server Error
+ * @apiUse ServerError
  */
 router.post("/users/:id", checkUserLoggedIn, (req, res) => {
   let users = new Users();
@@ -207,21 +261,34 @@ router.post("/users/:id", checkUserLoggedIn, (req, res) => {
 
 /**
  * @api {delete} /users/:id Delete a user
- * @apiGroup Users
  * @apiVersion 1.0.0
+ * @apiName DeleteUser
+ * @apiGroup Users
  *
- * @apiParam {id} id User id
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *     {
- *       "id": "2",
- *       "firstName": "Johnny",
- *       "lastName": "Doe",
- *       "email": "john.doe@gmail.com"
- *     }
+ * @apiDescription Admin can delete a user
  *
- * @apiErrorExample {json} Delete error
- *    HTTP/1.1 500 Internal Server Error
+ * @apiParam {Number} id User ID
+ *
+ * @apiExample Example usage:
+ * curl -X 'DELETE' http://localhost/users/1
+ *
+ * @apiSuccess {Number}   id          User ID.
+ * @apiSuccess {String}   firstName   User first name.
+ * @apiSuccess {String}   lastName    User last name.
+ * @apiSuccess {String}   email       Email address.
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": "2",
+ *     "firstName": "Johnny",
+ *     "lastName": "Doe",
+ *     "email": "john.doe@gmail.com"
+ *   }
+ *
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
  */
  router.delete("/users/:id", checkUserLoggedIn, (req, res) => {
   let users = new Users();

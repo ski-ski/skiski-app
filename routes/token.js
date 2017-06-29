@@ -6,32 +6,70 @@ const knex = require('../knex.js');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
 
+/**
+ * @apiDefine NotFoundError
+ *
+ * @apiError NotFoundError The requested path was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *
+ *       "Not found"
+ *
+ */
+
+/**
+  * @apiDefine UnAuthorized
+  *
+  * @apiError UnAuthorized The user is not authorized to access this route.
+  *
+  * @apiErrorExample Error-Response:
+  *     HTTP/1.1 401
+  *
+  *    "Not authorized"
+  *
+*/
+
+/**
+ * @apiDefine ServerError
+ *
+ * @apiError ServerError Interal server error.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 505 Interal Server Error
+ *
+ *     "{}"
+ *
+ */
+
 
 /**
  * @api {post} /token Log in
- * @apiGroup Token
  * @apiVersion 1.0.0
+ * @apiName PostToken
+ * @apiGroup Token
+ *
+ * @apiDescription Creates a new user account.
  *
  * @apiParam {String} email Email address
  * @apiParam {String} password Password
- * @apiParamExample {json} Input
- *    {
- *      "email": "john.doe@gmail.com",
- *      "password": "mY53cr3t"
- *    }
  *
- * @apiSuccess {Number} id User ID
- * @apiSuccess {String} firstName First name
- * @apiSuccess {String} lastName Last name
- * @apiSuccess {String} email Email address
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 1,
- *      firstName: "John",
- *      lastName: "Doe",
- *      email: "john.doe@gmail.com"
- *    }
+ * @apiExample Example usage:
+ * curl -d 'email=john.doe@gmail.com&password=mY53cr3t' http://localhost/token
+ *
+ * @apiSuccess {Number} id          User ID
+ * @apiSuccess {String} firstName   First name
+ * @apiSuccess {String} lastName    Last name
+ * @apiSuccess {String} email       Email address
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": 1,
+ *     "firstName": "John",
+ *     "lastName": "Doe",
+ *     "email": "john.doe@gmail.com"
+ *   }
  *
  * @apiErrorExample {String} Create error
  *    HTTP/1.1 400 Bad Request
@@ -81,16 +119,21 @@ router.post('/token', (req, res) => {
 
 /**
  * @api {get} /token Check if logged in
- * @apiGroup Token
  * @apiVersion 1.0.0
+ * @apiName CheckToken
+ * @apiGroup Token
+ *
+ * @apiDescription Check if user is logged in.
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/token
  *
  * @apiSuccess {Boolean} loggedIn true or false
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *     true
  *
- * @apiErrorExample {json} User not found
- *    HTTP/1.1 500 Internal Server Error
+ * @apiUse ServerError
  */
 router.get('/token', (req, res) => {
   if (req.cookies.token) {
@@ -103,14 +146,17 @@ router.get('/token', (req, res) => {
 
 /**
  * @api {delete} /token Log out
- * @apiGroup Token
  * @apiVersion 1.0.0
+ * @apiName DeleteToken
+ * @apiGroup Token
+ *
+ * @apiExample Example usage:
+ * curl -X 'DELETE' http://localhost/token
  *
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *
- * @apiErrorExample {json} Delete error
- *    HTTP/1.1 500 Internal Server Error
+ * @apiUse ServerError
  */
 router.delete('/token', (req, res) => {
   res.clearCookie('token', { path: '/' });
