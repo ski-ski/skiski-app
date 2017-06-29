@@ -31,6 +31,7 @@ suite(
           done();
         });
     });
+
     test("GET /users", done => {
       request(app)
         .get("/users")
@@ -112,6 +113,7 @@ suite(
             });
         });
     });
+
     test("POST /users when user already exists", done => {
       const password = "stevem";
 

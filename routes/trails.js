@@ -3,11 +3,40 @@ const router = express.Router();
 const humps = require('humps');
 const _ = require('lodash');
 const Trails = require('../repositories/Trails');
-// const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
 
 
-// Create one
+/**
+ * @api {post} /trails Create trail
+ * @apiVersion 1.0.0
+ * @apiGroup Trails
+ *
+ * @apiParam {String} name Trail name
+ * @apiParam {Number} resortId Resort id
+ * @apiParam {String} difficulty Difficulty
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "Red Dog",
+ *      "resortId": 5,
+ *      "difficulty": "green"
+ *    }
+ *
+ * @apiSuccess {Number} id Trail id
+ * @apiSuccess {String} name Trail name
+ * @apiSuccess {Number} resortId Resort id
+ * @apiSuccess {String} difficulty Difficulty
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "id": 22,
+ *      "name": "Red Dog",
+ *      "resortId": 5,
+ *      "difficulty": "green"
+ *    }
+ *
+ * @apiErrorExample {String} Create error
+ *    HTTP/1.1 400 Bad Request
+ *    Trail already exists
+ */
 router.post('/trails', (req, res, next) => {
   let trails = new Trails();
   let trailData = {
@@ -25,7 +54,28 @@ router.post('/trails', (req, res, next) => {
 });
 
 
-// Read one
+/**
+ * @api {get} /trails/:id Request trail information
+ * @apiGroup Trails
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {id} id Trail id
+ * @apiSuccess {Number} id Trail id
+ * @apiSuccess {String} name Trail name
+ * @apiSuccess {Number} resortId Resort id
+ * @apiSuccess {String} difficulty Difficulty
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "id": 22,
+ *      "name": "Red Dog",
+ *      "resortId": 5,
+ *      "difficulty": "green"
+ *    }
+ *
+ * @apiErrorExample {json} Trail not found
+ *    HTTP/1.1 404 Not Found
+ */
 router.get('/trails/:id', (req, res) => {
   let trails = new Trails();
   trails.getTrail(req.params.id)
@@ -41,7 +91,32 @@ router.get('/trails/:id', (req, res) => {
 });
 
 
-// Update one
+/**
+ * @api {post} /trails/:id Update a trail
+ * @apiGroup Trails
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {id} id Trail id
+ * @apiParam {String} name Trail name
+ * @apiParam {Number} resortId Resort id
+ * @apiParam {String} difficulty Difficulty
+ * @apiParamExample {json} Input
+ *    {
+ *      "difficulty": "blue"
+ *    }
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "id": 22,
+ *      "name": "Red Dog",
+ *      "resortId": 5,
+ *      "difficulty": "blue"
+ *    }
+ *
+ * @apiErrorExample {json} Trail not found
+ *    HTTP/1.1 404 Not Found
+ */
 router.post('/trails/:id', (req, res) =>{
   let trails = new Trails();
   let {name, resort_id, difficulty} = humps.decamelizeKeys(req.body);
@@ -54,7 +129,24 @@ router.post('/trails/:id', (req, res) =>{
 });
 
 
-// Delete one
+/**
+ * @api {delete} /trails/:id Delete a trail
+ * @apiGroup Trails
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {id} id Trail id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "id": 22,
+ *      "name": "Red Dog",
+ *      "resortId": 5,
+ *      "difficulty": "blue"
+ *    }
+ *
+ * @apiErrorExample {json} Trail not found
+ *    HTTP/1.1 404 Not Found
+ */
 router.delete('/trails/:id', (req, res) => {
   let trails = new Trails();
   let id = req.params.id;
@@ -75,7 +167,34 @@ router.delete('/trails/:id', (req, res) => {
 });
 
 
-// Read all
+/**
+ * @api {get} /trails List all trails
+ * @apiVersion 1.0.0
+ * @apiGroup Trails
+ *
+ * @apiSuccess {Object[]} trails Array of trail records
+ * @apiSuccess {Number} trails.id Trail id
+ * @apiSuccess {String} trails.name Trail name
+ * @apiSuccess {Number} trails.resortId Resort id
+ * @apiSuccess {String} trails.difficulty Difficulty
+ * @apiSuccessExample {json} Success
+ *     HTTP/1.1 200 OK
+ *     [{
+ *      },
+ *        "id": 21,
+ *        "name": "GS Bowl",
+ *        "resortId": 5,
+ *        "difficulty": "blue"
+ *      {
+ *        "id": 22,
+ *        "name": "Red Dog",
+ *        "resortId": 5,
+ *        "difficulty": "blue"
+ *      }]
+ *
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 router.get('/trails', (req, res) => {
   let trails = new Trails();
   trails.getTrails()
