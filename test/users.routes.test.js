@@ -11,6 +11,26 @@ const { addDatabaseHooks } = require("./utils");
 suite(
   "routes users",
   addDatabaseHooks(() => {
+    const agent = request.agent(app);
+
+    beforeEach(done => {
+      request(app)
+        .post("/token")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .send({
+          email: "steve@gmail.com",
+          password: "stevem"
+        })
+        .end((err, res) => {
+          if (err) {
+            return done(err);
+          }
+
+          agent.saveCookies(res);
+          done();
+        });
+    });
     test("GET /users", done => {
       request(app)
         .get("/users")
@@ -110,11 +130,12 @@ suite(
     });
 
     test("DELETE /users/:id", done => {
-      request(app)
+      agent
         .del("/users/1")
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200, {
+          id: 1,
           firstName: "Steve",
           lastName: "Morse",
           email: "steve@gmail.com",
