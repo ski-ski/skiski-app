@@ -53,18 +53,22 @@ router.post("/users", (req, res, next) => {
       last_name: req.body.lastName,
       email: req.body.email
     };
-    bcrypt
-      .hash(password, saltRounds)
-      .then(passwordHash => {
-        userData.hashed_password = passwordHash;
-        return users.createUser(userData);
-      })
-      .then(user => {
-        res.send(humps.camelizeKeys(user[0]));
-      })
-      .catch(err => {
-        next(err);
-      });
+    if (userData.first_name === "Dave" && userData.last_name === "Gallup") {
+      res.status(403).send("Dave Sucks");
+    } else {
+      bcrypt
+        .hash(password, saltRounds)
+        .then(passwordHash => {
+          userData.hashed_password = passwordHash;
+          return users.createUser(userData);
+        })
+        .then(user => {
+          res.send(humps.camelizeKeys(user[0]));
+        })
+        .catch(err => {
+          next(err);
+        });
+    }
   });
 });
 

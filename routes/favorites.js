@@ -5,8 +5,75 @@ const _ = require("lodash");
 const Favorites = require("../repositories/Favorites");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+/**
+ * @apiDefine NotFoundError
+ *
+ * @apiError NotFoundError The requested path was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *
+ *       "Not found"
+ *
+ */
 
-// Create one
+/**
+  * @apiDefine UnAuthorized
+  *
+  * @apiError UnAuthorized The user is not authorized to access this route.
+  *
+  * @apiErrorExample Error-Response:
+  *     HTTP/1.1 401
+  *
+  *    "Not authorized"
+  *
+*/
+
+/**
+ * @apiDefine ServerError
+ *
+ * @apiError ServerError Interal server error.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 505 Interal Server Error
+ *
+ *     "{}"
+ *
+ */
+
+/**
+ * @api {post} /favorites Create a favorite trail
+ * @apiVersion 1.0.0
+ * @apiName PostFavorite
+ * @apiGroup Favorites
+ *
+ * @apiDescription Signed up users can create favorite trails and rank them
+ *
+ * @apiParam {Number} userId    User ID.
+ * @apiParam {Number} trailId   Trail ID.
+ * @apiParam {Number} ranking   Tail Ranking
+ *
+ * @apiExample Example usage:
+ * curl -d 'userId=1&trailId=1&ranking=1' http://localhost/favorites
+ *
+ * @apiSuccess {Number}   id          Favorite ID.
+ * @apiSuccess {Number}   ranking     Ranking.
+ * @apiSuccess {Number}   trailId     Trail ID.
+ * @apiSuccess {Number}   userId       User ID.
+ *
+ * @apiSuccessExample Success-Response:
+ *
+ *   HTTP/1.1 200 OK
+ *  {
+ *    "id": 4,
+ *    "ranking": 3,
+ *    "trailId": 4,
+ *    "userId": 1
+ *   }
+ *
+ * @apiUse ServerError
+ * @apiUse NotFoundError
+*/
 router.post("/favorites", (req, res, next) => {
   let favorites = new Favorites();
 
@@ -25,7 +92,40 @@ router.post("/favorites", (req, res, next) => {
     });
 });
 
-// // Read one
+/**
+ * @api {get} /favorites/:id View favorited trail
+ * @apiVersion 1.0.0
+ * @apiName GETFavorite
+ * @apiGroup Favorites
+ *
+ * @apiDescription Users can view created favorite when using its ID
+ *
+ * @apiParam {Number} id    Favorite ID.
+ *
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/favorites/1
+ *
+ * @apiSuccess {Number}   id          Ranking ID.
+ * @apiSuccess {Number}   ranking     Ranking.
+ * @apiSuccess {Number}   trailId     Trail ID.
+ * @apiSuccess {Number}   userId       User ID.
+ *
+ * @apiSuccessExample Success-Response:
+ *
+ *   HTTP/1.1 200 OK
+ *  {
+ *    "id": 1,
+ *    "ranking": 3,
+ *    "trailId": 4,
+ *    "userId": 1
+ *   }
+ *
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
+*/
+
 router.get("/favorites/:id", checkUserLoggedIn, (req, res) => {
   let favorites = new Favorites();
   favorites
@@ -53,7 +153,39 @@ router.get("/favorites/:id", checkUserLoggedIn, (req, res) => {
     });
 });
 
-// Update one
+/**
+ * @api {post} /favorites/:id  Update a favorited trail
+ * @apiVersion 1.0.0
+ * @apiName UpdateFavorite
+ * @apiGroup Favorites
+ *
+ * @apiDescription Logged in users update their favorited trails
+ *
+ * @apiParam {Number} trailId   Trail ID.
+ * @apiParam {Number} ranking   Tail Ranking
+ *
+ * @apiExample Example usage:
+ * curl -d 'ranking=5' http://localhost/favorites/1
+ *
+ * @apiSuccess {Number}   id          Favorite ID.
+ * @apiSuccess {Number}   ranking     Ranking.
+ * @apiSuccess {Number}   trailId     Trail ID.
+ * @apiSuccess {Number}   userId       User ID.
+ *
+ * @apiSuccessExample Success-Response:
+ *
+ *   HTTP/1.1 200 OK
+ *  {
+ *    "id": 1,
+ *    "ranking": 5
+ *    "trailId": 4,
+ *    "userId": 1
+ *   }
+ *
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
+*/
 router.post("/favorites/:id", checkUserLoggedIn, (req, res) => {
   let favorites = new Favorites();
   favorites
@@ -86,7 +218,38 @@ router.post("/favorites/:id", checkUserLoggedIn, (req, res) => {
     });
 });
 
-// Delete one
+/**
+ * @api {delete} /favorites/:id  Delete a favorite
+ * @apiVersion 1.0.0
+ * @apiName DeleteFavorite
+ * @apiGroup Favorites
+ *
+ * @apiDescription Logged in users delete their favorited trail
+ *
+ * @apiParam {Number} id   Favorite ID.
+ *
+ * @apiExample Example usage:
+ * curl -X 'DELETE' http://localhost/favorites/1
+ *
+ * @apiSuccess {Number}   id          Favorite ID.
+ * @apiSuccess {Number}   ranking     Ranking.
+ * @apiSuccess {Number}   trailId     Trail ID.
+ * @apiSuccess {Number}   userId       User ID.
+ *
+ * @apiSuccessExample Success-Response:
+ *
+ *   HTTP/1.1 200 OK
+ *  {
+ *    "id": 1,
+ *    "ranking": 5
+ *    "trailId": 4,
+ *    "userId": 1
+ *   }
+ *
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
+*/
 router.delete("/favorites/:id", checkUserLoggedIn, (req, res) => {
   let favorites = new Favorites();
   if (isNaN(req.params.id)) {
@@ -119,7 +282,48 @@ router.delete("/favorites/:id", checkUserLoggedIn, (req, res) => {
     });
 });
 
-// Read all
+/**
+ * @api {get} /favorites View all favorited trails
+ * @apiVersion 1.0.0
+ * @apiName GETFavorites
+ * @apiGroup Favorites
+ *
+ * @apiDescription Logged in users can view all their favorited trails
+ *
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/favorites
+ *
+ * @apiSuccess {Object[]} favorites Array of objects with favorited trails.
+ *
+ * @apiSuccess {Number}   id          Ranking ID.
+ * @apiSuccess {Number}   ranking     Ranking.
+ * @apiSuccess {Number}   trailId     Trail ID.
+ * @apiSuccess {Number}   userId       User ID.
+ *
+ * @apiSuccessExample Success-Response:
+ *
+ *   HTTP/1.1 200 OK
+ *  [
+ *    {
+ *      "id": 1,
+ *      "ranking": 3,
+ *      "trailId": 4,
+ *      "userId": 1
+ *    } ,
+ *    {
+ *      "id": 2,
+ *      "ranking": 3,
+ *      "trailId": 4,
+ *      "userId": 1
+ *    }
+ *  ]
+ *
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
+*/
+
 router.get("/favorites", checkUserLoggedIn, (req, res) => {
   let favorites = new Favorites();
   favorites
