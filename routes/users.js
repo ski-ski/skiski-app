@@ -5,9 +5,40 @@ const humps = require("humps");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const Users = require("../repositories/Users");
-// const utils = require('./utils')
 
-// Sign up (Create account)
+
+/**
+ * @api {post} /users Create user account
+ * @apiVersion 1.0.0
+ * @apiGroup Users
+ *
+ * @apiParam {String} firstName First name
+ * @apiParam {String} lastName Last name
+ * @apiParam {String} email Email address
+ * @apiParamExample {json} Input
+ *    {
+ *      "firstName": "John",
+ *      "lastName": "Doe",
+ *      "email": "john.doe@gmail.com"
+ *    }
+ *
+ * @apiSuccess {Number} id User ID
+ * @apiSuccess {String} firstName First name
+ * @apiSuccess {String} lastName Last name
+ * @apiSuccess {String} email Email address
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "id": 1,
+ *      firstName: "John",
+ *      lastName: "Doe",
+ *      email: "john.doe@gmail.com"
+ *    }
+ *
+ * @apiErrorExample {String} Create error
+ *    HTTP/1.1 400 Bad Request
+ *    User already exists
+ */
 router.post("/users", (req, res, next) => {
   let users = new Users();
   // Check if account already exists
@@ -37,37 +68,18 @@ router.post("/users", (req, res, next) => {
   });
 });
 
-/**
- * @apiDefine UserNotFoundError
- *
- * @apiError UserNotFound The id of the user was not found.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "error": "User not found"
- *     }
- */
 
 /**
- * @api {get} /users Request all information for all users
- * @apiName GetUsers
- * @apiGroup Users
+ * @api {get} /users List all users
  * @apiVersion 1.0.0
+ * @apiGroup Users
  *
- * @apiDescription Testing testing. This is api Description.
- *
- * @apiExample Example usage:
- * curl -i http://localhost/users
- *
- * @apiSuccess {Object[]} users Array of user records.
- *
- * @apiSuccess {Number}   users.id            User ID.
- * @apiSuccess {String}   users.firstName     First name.
- * @apiSuccess {String}   users.lastName      Last name.
- * @apiSuccess {String}   users.email         Email address.
- *
- * @apiSuccessExample Success-Response:
+ * @apiSuccess {Object[]} users Array of user records
+ * @apiSuccess {Number} users.id User ID
+ * @apiSuccess {String} users.firstName First name
+ * @apiSuccess {String} users.lastName Last name
+ * @apiSuccess {String} users.email Email address
+ * @apiSuccessExample {json} Success
  *     HTTP/1.1 200 OK
  *     [{
  *       "id": "1",
@@ -82,7 +94,8 @@ router.post("/users", (req, res, next) => {
  *       "email": "john.doe@gmail.com"
  *      }]
  *
- * @apiUse UserNotFoundError
+ * @apiErrorExample {json} List error
+ *    HTTP/1.1 500 Internal Server Error
  */
 router.get("/users", (req, res) => {
   let users = new Users();
@@ -100,35 +113,30 @@ router.get("/users", (req, res) => {
     });
 });
 
+
 /**
  * @api {get} /user/:id Request User information
- * @apiVersion 1.0.0
- * @apiName GetUser
  * @apiGroup Users
+ * @apiVersion 1.0.0
  *
- * @apiDescription Testing testing. This is api Description.
- *
- * @apiParam {String} id User ID.
- *
- * @apiExample Example usage:
- * curl -i http://localhost/users/2
- *
- * @apiSuccess {String}   id            User ID.
- * @apiSuccess {String}   firstName     First name.
- * @apiSuccess {String}   lastName      Last name.
- * @apiSuccess {String}   email         Email address.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
+ * @apiParam {id} id User id
+ * @apiSuccess {String} id User ID
+ * @apiSuccess {String} firstName First name
+ * @apiSuccess {String} lastName Last name
+ * @apiSuccess {String} email Email address
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
  *     {
  *       "id": "2",
  *       "firstName": "John",
  *       "lastName": "Doe",
- *       "email": "john.doe@gmail.com"
+ *       "email": "john.doe@gmail.com",
+ *       "hashedPassword": "$2a$12$C9AYYmcLVGYlGoO4...."
  *     }
  *
- * @apiUse UserNotFoundError
-*/
+ * @apiErrorExample {json} User not found
+ *    HTTP/1.1 404 Not Found
+ */
 router.get("/users/:id", (req, res) => {
   let users = new Users();
   let promise = users.getUser(req.params.id);
@@ -145,6 +153,33 @@ router.get("/users/:id", (req, res) => {
     });
 });
 
+
+/**
+ * @api {post} /users/:id Update a user
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {id} id User id
+ * @apiParam {String} firstName First name
+ * @apiParam {String} lastName Last name
+ * @apiParam {String} email Email address
+ * @apiParamExample {json} Input
+ *    {
+ *      "firstName": "Johnny"
+ *    }
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 204 No Content
+ *     {
+ *       "id": "2",
+ *       "firstName": "Johnny",
+ *       "lastName": "Doe",
+ *       "email": "john.doe@gmail.com"
+ *     }
+ *
+ * @apiErrorExample {json} Update error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 router.post("/users/:id", checkUserLoggedIn, (req, res) => {
   let users = new Users();
 
@@ -165,7 +200,26 @@ router.post("/users/:id", checkUserLoggedIn, (req, res) => {
   });
 });
 
-router.delete("/users/:id", checkUserLoggedIn, (req, res) => {
+
+/**
+ * @api {delete} /users/:id Delete a user
+ * @apiGroup Users
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {id} id User id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *     {
+ *       "id": "2",
+ *       "firstName": "Johnny",
+ *       "lastName": "Doe",
+ *       "email": "john.doe@gmail.com"
+ *     }
+ *
+ * @apiErrorExample {json} Delete error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+ router.delete("/users/:id", checkUserLoggedIn, (req, res) => {
   let users = new Users();
   let userId = req.userId;
   if (isNaN(userId)) {
@@ -188,6 +242,7 @@ router.delete("/users/:id", checkUserLoggedIn, (req, res) => {
       res.status(500).send(err);
     });
 });
+
 
 function checkUserLoggedIn(req, res, next) {
   if (!req.cookies.token) {

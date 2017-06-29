@@ -6,7 +6,37 @@ const knex = require('../knex.js');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
 
-// Log in 
+
+/**
+ * @api {post} /token Log in
+ * @apiGroup Token
+ * @apiVersion 1.0.0
+ *
+ * @apiParam {String} email Email address
+ * @apiParam {String} password Password
+ * @apiParamExample {json} Input
+ *    {
+ *      "email": "john.doe@gmail.com",
+ *      "password": "mY53cr3t"
+ *    }
+ *
+ * @apiSuccess {Number} id User ID
+ * @apiSuccess {String} firstName First name
+ * @apiSuccess {String} lastName Last name
+ * @apiSuccess {String} email Email address
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "id": 1,
+ *      firstName: "John",
+ *      lastName: "Doe",
+ *      email: "john.doe@gmail.com"
+ *    }
+ *
+ * @apiErrorExample {String} Create error
+ *    HTTP/1.1 400 Bad Request
+ *    Bad email or password
+ */
 router.post('/token', (req, res) => {
   let user;
   knex('users')
@@ -48,7 +78,20 @@ router.post('/token', (req, res) => {
     });
 });
 
-// Check if logged in
+
+/**
+ * @api {get} /token Check if logged in
+ * @apiGroup Token
+ * @apiVersion 1.0.0
+ *
+ * @apiSuccess {Boolean} loggedIn true or false
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *     true
+ *
+ * @apiErrorExample {json} User not found
+ *    HTTP/1.1 500 Internal Server Error
+ */
 router.get('/token', (req, res) => {
   if (req.cookies.token) {
     res.status(200).send(true);
@@ -57,7 +100,18 @@ router.get('/token', (req, res) => {
   }
 });
 
-// Log out
+
+/**
+ * @api {delete} /token Log out
+ * @apiGroup Token
+ * @apiVersion 1.0.0
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *
+ * @apiErrorExample {json} Delete error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 router.delete('/token', (req, res) => {
   res.clearCookie('token', { path: '/' });
   res.status(200).send(true);
