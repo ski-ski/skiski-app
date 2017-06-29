@@ -22,6 +22,13 @@ suite('resorts migration', addDatabaseHooks(() => {
             nullable: false,
             defaultValue: '\'\'::character varying'
           },
+          
+          city: {
+            type: 'character varying',
+            maxLength: 255,
+            nullable: false,
+            defaultValue: '\'\'::character varying'
+          },
 
           windspeed: {
             type: 'integer',
@@ -30,7 +37,14 @@ suite('resorts migration', addDatabaseHooks(() => {
             defaultValue: null
           },
 
-          temperature: {
+          high_temperature: {
+            type: 'integer',
+            maxLength: null,
+            nullable: false,
+            defaultValue: null
+          },
+
+          low_temperature: {
             type: 'integer',
             maxLength: null,
             nullable: false,

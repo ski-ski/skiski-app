@@ -2,6 +2,18 @@
   "name": "skiski-app",
   "version": "1.0.0",
   "description": "Ski trail ratings",
+  "apidoc": {
+    "title": "Ski trails ratings",
+    "url": "https://github.com/ski-ski/skiski-app",
+    "order": [
+      "GetUser",
+      "PostUser"
+    ],
+    "template": {
+      "withCompare": true,
+      "withGenerator": true
+    }
+  },
   "main": "app.js",
   "scripts": {
     "knex": "knex",
@@ -24,15 +36,20 @@
     "body-parser": "^1.17.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.3",
+    "humps": "^2.0.1",
     "jsonwebtoken": "^7.4.1",
     "knex": "^0.13.0",
-    "pg": "^6.4.0"
+    "lodash": "^4.17.4",
+    "pg": "^6.4.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
   },
   "devDependencies": {
     "chai": "^4.0.2",
+    "dotenv": "^4.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
-    "supertest": "^3.0.0"
+    "supertest": "^1.2.0"
   }
 }

@@ -9,10 +9,10 @@ When you are ready to submit a PR, do an interactive rebase on your branch to cl
 After each such pull request, individuals will be informed and should then locally:
 
   - switch to dev branch (checkout)
-  - do a git pull
+  - do a git pull (git pull origin dev)
   - switch back to feature branch
   - rebase
-  - git push
+  - git push origin <feature branch name>
 
 Later when testing is OK, the dev branch will be merged into master branch with another pull request.  
 
@@ -30,5 +30,10 @@ Utilization:
 - Log all bugs.
 - Assign bugs for fixing.
 
-x
+## apiDoc
 
+How to generate docs:
+
+```
+  apidoc -i routes/ -o apidoc/
+```

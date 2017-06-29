@@ -1,16 +1,37 @@
-
-const knex = require('../knex');
-
+const knex = require("../knex");
+const bcrypt = require("bcrypt");
 class Users {
   constructor() {}
 
-  getUsers() {
-    return knex('users');
+  createUser(userData) {
+    return knex("users").insert(userData, [
+      "id",
+      "first_name",
+      "last_name",
+      "email"
+    ]);
   }
 
-  // getUser(id) {
-  //   return knex('users').where('id', id);
-  // }
+  getUsers() {
+    return knex("users");
+  }
+
+  getUser(id) {
+    return knex("users").where("id", id);
+  }
+
+  getUserByEmail(email) {
+    return knex("users").first().where("email", email);
+  }
+
+  updateUser(id, userData) {
+    return knex("users")
+      .update(userData, ["id", "first_name", "last_name", "email"])
+      .where("id", id);
+  }
+  deleteUser(id) {
+    return knex("users").del().where("id", id).returning("*");
+  }
 }
 
 module.exports = Users;
