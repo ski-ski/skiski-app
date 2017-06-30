@@ -20,6 +20,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use('/apidoc', express.static(path.join(__dirname, 'apidoc')));
+app.get('/', (req, res) => {
+  res.status(200).send('Welcome to skiski.');
+};
 
 app.use(users);
 app.use(token);

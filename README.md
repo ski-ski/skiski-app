@@ -6,4 +6,4 @@ SkiSki is a production class RESTFUL API that serves up data about resorts in th
 
 ## Routes
 
-Click [here](http://htmlpreview.github.io/?https://github.com/ski-ski/skiski-app/blob/master/routes.html) to render routes document.
+Click [here](https://ski-ski-g52-skiski-app.herokuapp.com/apidoc/) to view api document.
