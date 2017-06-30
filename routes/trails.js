@@ -4,34 +4,71 @@ const humps = require('humps');
 const _ = require('lodash');
 const Trails = require('../repositories/Trails');
 
+/**
+ * @apiDefine NotFoundError
+ *
+ * @apiError NotFoundError The requested path was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *
+ *       "Not found"
+ *
+ */
+
+/**
+  * @apiDefine UnAuthorized
+  *
+  * @apiError UnAuthorized The user is not authorized to access this route.
+  *
+  * @apiErrorExample Error-Response:
+  *     HTTP/1.1 401
+  *
+  *    "Not authorized"
+  *
+*/
+
+/**
+ * @apiDefine ServerError
+ *
+ * @apiError ServerError Interal server error.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 505 Interal Server Error
+ *
+ *     "{}"
+ *
+ */
+
 
 /**
  * @api {post} /trails Create trail
  * @apiVersion 1.0.0
+ * @apiName PostTrail
  * @apiGroup Trails
  *
- * @apiParam {String} name Trail name
- * @apiParam {Number} resortId Resort id
- * @apiParam {String} difficulty Difficulty
- * @apiParamExample {json} Input
- *    {
- *      "name": "Red Dog",
- *      "resortId": 5,
- *      "difficulty": "green"
- *    }
+ * @apiDescription Signed up users can create trails. They have to be assigned to an existing resort.
  *
- * @apiSuccess {Number} id Trail id
- * @apiSuccess {String} name Trail name
- * @apiSuccess {Number} resortId Resort id
- * @apiSuccess {String} difficulty Difficulty
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 22,
- *      "name": "Red Dog",
- *      "resortId": 5,
- *      "difficulty": "green"
- *    }
+ * @apiParam {String} name        Trail name
+ * @apiParam {Number} resortId    Resort id
+ * @apiParam {String} difficulty  Difficulty
+ *
+ * @apiExample Example usage:
+ * curl -d 'name="Red Dog"&resortId="5"&difficulty="green"' http://localhost/trails
+ *
+ * @apiSuccess {Number} id          Trail id
+ * @apiSuccess {String} name        Trail name
+ * @apiSuccess {Number} resortId    Resort id
+ * @apiSuccess {String} difficulty  Difficulty
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": 22,
+ *     "name": "Red Dog",
+ *     "resortId": 5,
+ *     "difficulty": "green"
+ *   }
  *
  * @apiErrorExample {String} Create error
  *    HTTP/1.1 400 Bad Request
@@ -56,22 +93,30 @@ router.post('/trails', (req, res, next) => {
 
 /**
  * @api {get} /trails/:id Request trail information
- * @apiGroup Trails
  * @apiVersion 1.0.0
+ * @apiName GetTrail
+ * @apiGroup Trails
  *
- * @apiParam {id} id Trail id
- * @apiSuccess {Number} id Trail id
- * @apiSuccess {String} name Trail name
- * @apiSuccess {Number} resortId Resort id
- * @apiSuccess {String} difficulty Difficulty
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 22,
- *      "name": "Red Dog",
- *      "resortId": 5,
- *      "difficulty": "green"
- *    }
+ * @apiDescription Users can view a trail using its ID
+ *
+ * @apiParam {Number} id Trail id
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/trails/1
+
+ * @apiSuccess {Number} id          Trail id
+ * @apiSuccess {String} name        Trail name
+ * @apiSuccess {Number} resortId    Resort id
+ * @apiSuccess {String} difficulty  Difficulty
+ *
+ * @apiSuccessExample Success-Response
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": 22,
+ *     "name": "Red Dog",
+ *     "resortId": 5,
+ *     "difficulty": "green"
+ *   }
  *
  * @apiErrorExample {json} Trail not found
  *    HTTP/1.1 404 Not Found
@@ -93,29 +138,30 @@ router.get('/trails/:id', (req, res) => {
 
 /**
  * @api {post} /trails/:id Update a trail
- * @apiGroup Trails
  * @apiVersion 1.0.0
+ * @apiName UpdateTrail
+ * @apiGroup Trails
  *
- * @apiParam {id} id Trail id
- * @apiParam {String} name Trail name
- * @apiParam {Number} resortId Resort id
- * @apiParam {String} difficulty Difficulty
- * @apiParamExample {json} Input
- *    {
- *      "difficulty": "blue"
- *    }
+ * @apiDescription Update trail information
  *
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 22,
- *      "name": "Red Dog",
- *      "resortId": 5,
- *      "difficulty": "blue"
- *    }
+ * @apiParam {Number} id          Trail id
+ * @apiParam {String} name        Trail name
+ * @apiParam {Number} resortId    Resort id
+ * @apiParam {String} difficulty  Difficulty
+ * @apiExample Example usage:
+ * curl -d 'difficulty=blue' http://localhost/trails
  *
- * @apiErrorExample {json} Trail not found
- *    HTTP/1.1 404 Not Found
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": 22,
+ *     "name": "Red Dog",
+ *     "resortId": 5,
+ *     "difficulty": "blue"
+ *   }
+ *
+ * @apiUse ServerError
+ * @apiUse NotFoundError
  */
 router.post('/trails/:id', (req, res) =>{
   let trails = new Trails();
@@ -130,22 +176,35 @@ router.post('/trails/:id', (req, res) =>{
 
 
 /**
- * @api {delete} /trails/:id Delete a trail
- * @apiGroup Trails
+ * @api {delete} /trails/:id  Delete a trail
  * @apiVersion 1.0.0
+ * @apiName DeleteTrail
+ * @apiGroup Trails
  *
- * @apiParam {id} id Trail id
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
- *      "id": 22,
- *      "name": "Red Dog",
- *      "resortId": 5,
- *      "difficulty": "blue"
- *    }
+ * @apiDescription Logged in users can delete a trail
  *
- * @apiErrorExample {json} Trail not found
- *    HTTP/1.1 404 Not Found
+ * @apiParam {Number} id  Trail ID
+ *
+ * @apiExample Example usage:
+ * curl -X 'DELETE' http://localhost/trails/1
+ *
+ * @apiSuccess {Number}   id          Trail ID.
+ * @apiSuccess {String}   name        Trail name.
+ * @apiSuccess {Number}   resortId    Resort ID.
+ * @apiSuccess {String}   difficulty  Difficulty.
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": 22,
+ *     "name": "Red Dog",
+ *     "resortId": 5,
+ *     "difficulty": "blue"
+ *   }
+ *
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
  */
 router.delete('/trails/:id', (req, res) => {
   let trails = new Trails();
@@ -170,30 +229,40 @@ router.delete('/trails/:id', (req, res) => {
 /**
  * @api {get} /trails List all trails
  * @apiVersion 1.0.0
+ * @apiName GetTrails
  * @apiGroup Trails
+ *
+ * @apiDescription Logged in users can view all their favorited trails
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/trails
  *
  * @apiSuccess {Object[]} trails Array of trail records
  * @apiSuccess {Number} trails.id Trail id
  * @apiSuccess {String} trails.name Trail name
  * @apiSuccess {Number} trails.resortId Resort id
  * @apiSuccess {String} trails.difficulty Difficulty
- * @apiSuccessExample {json} Success
- *     HTTP/1.1 200 OK
- *     [{
- *      },
- *        "id": 21,
- *        "name": "GS Bowl",
- *        "resortId": 5,
- *        "difficulty": "blue"
- *      {
- *        "id": 22,
- *        "name": "Red Dog",
- *        "resortId": 5,
- *        "difficulty": "blue"
- *      }]
  *
- * @apiErrorExample {json} List error
- *    HTTP/1.1 500 Internal Server Error
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   [
+  *    {
+ *       "id": 21,
+ *       "name": "GS Bowl",
+ *       "resortId": 5,
+ *       "difficulty": "blue"
+ *     },
+ *     {
+ *       "id": 22,
+ *       "name": "Red Dog",
+ *       "resortId": 5,
+ *       "difficulty": "blue"
+ *     }
+ *   ]
+ *
+ * @apiUse ServerError
+ * @apiUse UnAuthorized
+ * @apiUse NotFoundError
  */
 router.get('/trails', (req, res) => {
   let trails = new Trails();
