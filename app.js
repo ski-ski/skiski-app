@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const portNumber = 3000;
+const portNumber = process.env.PORT || 3000;
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
