@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const portNumber = 3000;
+const portNumber = process.env.PORT || 3000;
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
@@ -20,6 +20,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use('/apidoc', express.static(path.join(__dirname, 'apidoc')));
+app.get('/', (req, res) => {
+  res.status(200).send('Welcome to skiski.');
+});
 
 app.use(users);
 app.use(token);
