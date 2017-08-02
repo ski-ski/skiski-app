@@ -3,8 +3,8 @@ const router = express.Router();
 const humps = require("humps");
 const _ = require("lodash");
 const Ratings = require("../repositories/Ratings");
-// const bcrypt = require('bcrypt');
-// const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 /**
  * @apiDefine NotFoundError
@@ -186,15 +186,21 @@ router.get("/ratings/:id", (req, res) => {
   * @apiUse ServerError
   * @apiUse NotFoundError
  */
-router.post("/ratings/:id", (req, res) => {
+
+router.post("/ratings/:id", checkUserLoggedIn, (req, res) => {
   let ratings = new Ratings();
+
+  if (Number(req.userId) !== Number(req.params.id)) {
+    return res.sendStatus(401);
+  }
   let { user_id, trail_id, rating, review } = humps.decamelizeKeys(req.body);
   let validFields = { user_id, trail_id, rating, review };
   let filteredObject = _(validFields)
     .omitBy(_.isUndefined)
     .omitBy(_.isNull)
     .value();
-  ratings.updateRating(req.params.id, filteredObject).then(rating => {
+  let promise = ratings.updateRating(req.params.id, filteredObject);
+  promise.then(rating => {
     res.json(humps.camelizeKeys(rating[0]));
   });
 });
@@ -236,22 +242,34 @@ router.post("/ratings/:id", (req, res) => {
   * @apiUse ServerError
   * @apiUse NotFoundError
  */
-router.delete("/ratings/:id", (req, res) => {
+router.delete("/ratings/:id", checkUserLoggedIn, (req, res) => {
   let ratings = new Ratings();
-  let id = req.params.id;
-  if (isNaN(id)) {
+  if (isNaN(req.params.id)) {
     return res.sendStatus(404);
   }
   ratings
-    .deleteRating(id)
-    .then(rating => {
-      if (!rating[0]) {
-        res.sendStatus(404);
+    .getRating(req.params.id)
+    .then(record => {
+      if (Number(req.userId) !== Number(record[0].user_id)) {
+        return false;
+      }
+      return true;
+    })
+    .then(authorized => {
+      if (authorized) {
+        ratings.deleteRating(req.params.id).then(rating => {
+          if (!rating[0]) {
+            res.sendStatus(404);
+          } else {
+            res.send(humps.camelizeKeys(rating[0]));
+          }
+        });
       } else {
-        res.send(humps.camelizeKeys(rating[0]));
+        res.sendStatus(401);
       }
     })
     .catch(err => {
+      console.log(err);
       res.status(500).send(err);
     });
 });
@@ -319,5 +337,16 @@ router.get("/ratings", (req, res) => {
       res.status(500).send(err);
     });
 });
+
+function checkUserLoggedIn(req, res, next) {
+  if (!req.cookies.token) {
+    res.sendStatus(401);
+  } else {
+    let userObject = jwt.decode(req.cookies.token);
+    let userId = userObject.sub.id;
+    req.userId = userId;
+    next();
+  }
+}
 
 module.exports = router;

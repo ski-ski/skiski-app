@@ -6,7 +6,75 @@ const knex = require('../knex.js');
 const jwt = require('jsonwebtoken');
 const Users = require('../repositories/Users');
 
-// Log in 
+/**
+ * @apiDefine NotFoundError
+ *
+ * @apiError NotFoundError The requested path was not found.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *
+ *       "Not found"
+ *
+ */
+
+/**
+  * @apiDefine UnAuthorized
+  *
+  * @apiError UnAuthorized The user is not authorized to access this route.
+  *
+  * @apiErrorExample Error-Response:
+  *     HTTP/1.1 401
+  *
+  *    "Not authorized"
+  *
+*/
+
+/**
+ * @apiDefine ServerError
+ *
+ * @apiError ServerError Interal server error.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 505 Interal Server Error
+ *
+ *     "{}"
+ *
+ */
+
+
+/**
+ * @api {post} /token Log in
+ * @apiVersion 1.0.0
+ * @apiName PostToken
+ * @apiGroup Token
+ *
+ * @apiDescription Creates a new user account.
+ *
+ * @apiParam {String} email Email address
+ * @apiParam {String} password Password
+ *
+ * @apiExample Example usage:
+ * curl -d 'email=john.doe@gmail.com&password=mY53cr3t' http://localhost/token
+ *
+ * @apiSuccess {Number} id          User ID
+ * @apiSuccess {String} firstName   First name
+ * @apiSuccess {String} lastName    Last name
+ * @apiSuccess {String} email       Email address
+ *
+ * @apiSuccessExample Success-Response:
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "id": 1,
+ *     "firstName": "John",
+ *     "lastName": "Doe",
+ *     "email": "john.doe@gmail.com"
+ *   }
+ *
+ * @apiErrorExample {String} Create error
+ *    HTTP/1.1 400 Bad Request
+ *    Bad email or password
+ */
 router.post('/token', (req, res) => {
   let user;
   knex('users')
@@ -48,7 +116,25 @@ router.post('/token', (req, res) => {
     });
 });
 
-// Check if logged in
+
+/**
+ * @api {get} /token Check if logged in
+ * @apiVersion 1.0.0
+ * @apiName CheckToken
+ * @apiGroup Token
+ *
+ * @apiDescription Check if user is logged in.
+ *
+ * @apiExample Example usage:
+ * curl -i http://localhost/token
+ *
+ * @apiSuccess {Boolean} loggedIn true or false
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *     true
+ *
+ * @apiUse ServerError
+ */
 router.get('/token', (req, res) => {
   if (req.cookies.token) {
     res.status(200).send(true);
@@ -57,7 +143,21 @@ router.get('/token', (req, res) => {
   }
 });
 
-// Log out
+
+/**
+ * @api {delete} /token Log out
+ * @apiVersion 1.0.0
+ * @apiName DeleteToken
+ * @apiGroup Token
+ *
+ * @apiExample Example usage:
+ * curl -X 'DELETE' http://localhost/token
+ *
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *
+ * @apiUse ServerError
+ */
 router.delete('/token', (req, res) => {
   res.clearCookie('token', { path: '/' });
   res.status(200).send(true);
