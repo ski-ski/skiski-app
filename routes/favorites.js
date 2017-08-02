@@ -5,6 +5,7 @@ const _ = require("lodash");
 const Favorites = require("../repositories/Favorites");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 /**
  * @apiDefine NotFoundError
  *
@@ -51,7 +52,7 @@ const jwt = require("jsonwebtoken");
  *
  * @apiParam {Number} userId    User ID.
  * @apiParam {Number} trailId   Trail ID.
- * @apiParam {Number} ranking   Tail Ranking
+ * @apiParam {Number} ranking   Trail Ranking
  *
  * @apiExample Example usage:
  * curl -d 'userId=1&trailId=1&ranking=1' http://localhost/favorites
@@ -62,13 +63,12 @@ const jwt = require("jsonwebtoken");
  * @apiSuccess {Number}   userId       User ID.
  *
  * @apiSuccessExample Success-Response:
- *
  *   HTTP/1.1 200 OK
- *  {
- *    "id": 4,
- *    "ranking": 3,
- *    "trailId": 4,
- *    "userId": 1
+ *   {
+ *     "id": 4,
+ *     "ranking": 3,
+ *     "trailId": 4,
+ *     "userId": 1
  *   }
  *
  * @apiUse ServerError
@@ -95,13 +95,12 @@ router.post("/favorites", (req, res, next) => {
 /**
  * @api {get} /favorites/:id View favorited trail
  * @apiVersion 1.0.0
- * @apiName GETFavorite
+ * @apiName GetFavorite
  * @apiGroup Favorites
  *
  * @apiDescription Users can view created favorite when using its ID
  *
  * @apiParam {Number} id    Favorite ID.
- *
  *
  * @apiExample Example usage:
  * curl -i http://localhost/favorites/1
@@ -112,13 +111,12 @@ router.post("/favorites", (req, res, next) => {
  * @apiSuccess {Number}   userId       User ID.
  *
  * @apiSuccessExample Success-Response:
- *
  *   HTTP/1.1 200 OK
- *  {
- *    "id": 1,
- *    "ranking": 3,
- *    "trailId": 4,
- *    "userId": 1
+ *   {
+ *     "id": 1,
+ *     "ranking": 3,
+ *     "trailId": 4,
+ *     "userId": 1
  *   }
  *
  * @apiUse ServerError
@@ -234,16 +232,15 @@ router.post("/favorites/:id", checkUserLoggedIn, (req, res) => {
  * @apiSuccess {Number}   id          Favorite ID.
  * @apiSuccess {Number}   ranking     Ranking.
  * @apiSuccess {Number}   trailId     Trail ID.
- * @apiSuccess {Number}   userId       User ID.
+ * @apiSuccess {Number}   userId      User ID.
  *
  * @apiSuccessExample Success-Response:
- *
  *   HTTP/1.1 200 OK
- *  {
- *    "id": 1,
- *    "ranking": 5
- *    "trailId": 4,
- *    "userId": 1
+ *   {
+ *     "id": 1,
+ *     "ranking": 5
+ *     "trailId": 4,
+ *     "userId": 1
  *   }
  *
  * @apiUse ServerError
@@ -290,34 +287,31 @@ router.delete("/favorites/:id", checkUserLoggedIn, (req, res) => {
  *
  * @apiDescription Logged in users can view all their favorited trails
  *
- *
  * @apiExample Example usage:
  * curl -i http://localhost/favorites
  *
  * @apiSuccess {Object[]} favorites Array of objects with favorited trails.
- *
  * @apiSuccess {Number}   id          Ranking ID.
  * @apiSuccess {Number}   ranking     Ranking.
  * @apiSuccess {Number}   trailId     Trail ID.
  * @apiSuccess {Number}   userId       User ID.
  *
  * @apiSuccessExample Success-Response:
- *
  *   HTTP/1.1 200 OK
- *  [
- *    {
- *      "id": 1,
- *      "ranking": 3,
- *      "trailId": 4,
- *      "userId": 1
- *    } ,
- *    {
- *      "id": 2,
- *      "ranking": 3,
- *      "trailId": 4,
- *      "userId": 1
- *    }
- *  ]
+ *   [
+ *     {
+ *       "id": 1,
+ *       "ranking": 3,
+ *       "trailId": 4,
+ *       "userId": 1
+ *     },
+ *     {
+ *       "id": 2,
+ *       "ranking": 3,
+ *       "trailId": 4,
+ *       "userId": 1
+ *     }
+ *   ]
  *
  * @apiUse ServerError
  * @apiUse UnAuthorized

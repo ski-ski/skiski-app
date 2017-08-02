@@ -23,25 +23,22 @@ class Resorts {
       .then(resortsData => {
         let dbRes = resortsData.map((resortData, index) => {
           let parsedData = JSON.parse(resortData);
-          return knex("resorts")
-            .where("id", ids[index])
-            .update(
-              {
-                high_temperature:
-                  parsedData.forecast.simpleforecast.forecastday[0].high
-                    .fahrenheit,
-                low_temperature:
-                  parsedData.forecast.simpleforecast.forecastday[0].low
-                    .fahrenheit,
-                snow_depth:
-                  parsedData.forecast.simpleforecast.forecastday[0].snow_allday
-                    .in,
-                windspeed:
-                  parsedData.forecast.simpleforecast.forecastday[0].avewind.mph
-              },
-              "*"
-            )
-            .first();
+          return knex("resorts").where("id", ids[index]).update(
+            {
+              high_temperature:
+                parsedData.forecast.simpleforecast.forecastday[0].high
+                  .fahrenheit,
+              low_temperature:
+                parsedData.forecast.simpleforecast.forecastday[0].low
+                  .fahrenheit,
+              snow_depth:
+                parsedData.forecast.simpleforecast.forecastday[0].snow_allday
+                  .in,
+              windspeed:
+                parsedData.forecast.simpleforecast.forecastday[0].avewind.mph
+            },
+            "*"
+          );
         });
         return Promise.all(dbRes);
       })
